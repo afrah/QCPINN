@@ -1,20 +1,19 @@
 # About
 
-The code implements a Continuous Variable Quantum Layer using Gaussian operations, integrating PyTorch with PennyLane for quantum computations. It processes quantum states using displacement, squeezing, and beam splitting.
+The code implements a Continuous Variable Quantum Neural Network(QCPINN), integrating PyTorch with PennyLane for quantum computations accorind to the paper [QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs](https://arxiv.org/abs/2503.16678)
 
 
 ## Getting Started
 
 ```bash
-conda create -f requirements.yaml
-conda activate qnn4pde
+conda create -f qcpinn.yaml
+conda activate qcpinn
 ```
 
 ### Training Models
 
 
 ```bash
-conda activate QCPINN
 
 # Cavity
 python -m src.poisson.cavity_hybrid_trainer
@@ -36,25 +35,25 @@ python -m src.poisson.diffusion_hybrid_trainer
 Note: Used VS Code Jupyter to run the Notebooks
 
 
-### Inference
-# Cavity
+## Inference
+
+### Cavity
 python -m src.contour_plots.cavity_hybrid_plotting
 
-# Helmholtz
+### Helmholtz
 python -m src.contour_plots.helmholtz_hybrid_plotting
 
-# Klein-Gordon
+### Klein-Gordon
 python -m src.contour_plots.klein_gordon_hybrid_plotting
 
-# Wave
+### Wave
 python -m src.contour_plots.wave_hybrid_plotting
 
-# Diffusion
+### Diffusion
 python -m src.contour_plots.diffusion_hybrid_plotting
 
-## Features
+## Code Structure
 
-Code structure:
 
 ```
 .
@@ -63,12 +62,6 @@ Code structure:
 │   └── cavity.mat
 ├── final_models
 │   ├── 2025-02-06_19-25-14-069398
-│   │   ├── 2025-02-06_19-25-14-069398
-│   │   │   ├── circuit.pdf
-│   │   │   ├── loss_history.pdf
-│   │   │   ├── model.pth
-│   │   │   ├── output.log
-│   │   │   └── prediction.png
 │   │   ├── circuit.pdf
 │   │   ├── loss_history.pdf
 │   │   ├── model.pth
@@ -117,12 +110,8 @@ Code structure:
 │   └── 2025-02-25_17-21-36-221407
 │       ├── model.pth
 │       └── output.log
-├── qcpinn-explicit.txt
-├── results
-│   └── circuit_case1.pdf
+├── qcpinn.yaml
 └── src
-    ├── __pycache__
-    │   └── utilities.cpython-38.pyc
     ├── contour_plots
     │   ├── cavity_hybrid_plotting.py
     │   ├── diffusion_hybrid_plotting.py
@@ -188,7 +177,7 @@ Code structure:
     │       ├── helmholtz_hybrid_training_amplitude.ipynb
     │       ├── wave_hybrid_training.ipynb
     │       └── wave_hybrid_training_classic.ipynb
-    ├── poisson
+    ├── trainer
     │   ├── CVNeuralNetwork.py
     │   ├── CVNeuralNetwork2.py
     │   ├── ECVQNN.py
@@ -218,37 +207,6 @@ Code structure:
         ├── plotting.py
         └── utilities.py
 ```
-
-### Architecture
-- Inherits from `nn.Module`
-- Uses PennyLane's Gaussian device
-- Implements separate circuits for X and P quadrature measurements
-- Supports batch processing of quantum operations
-
-### Parameters
-1. Trainable parameters:
-   - Displacements: shape (num_layers, num_qubits, 2)
-   - Squeezing: shape (num_layers, num_qubits, 2)
-   - Beamsplitter: shape (num_layers, num_qubits-1, 2)
-
-2. Quantum Operations:
-   - Displacement gates for state preparation
-   - Squeezing gates with positive magnitude constraint
-   - Beamsplitter gates with sigmoid-constrained transmittivity
-
-
-
-## Technical Observations
-
-1. **Quantum Circuit Design**
-   - The circuit implements a layered architecture with alternating single-mode and two-mode operations
-   - Each layer applies transformations in sequence: displacement → squeezing → beamsplitter
-   - The measurement strategy uses both X and P quadratures for complete state information
-
-
-## License
-
-TODO 
 
 ## Support
 
