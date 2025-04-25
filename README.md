@@ -62,54 +62,15 @@ python -m src.contour_plots.diffusion_hybrid_plotting
 │   └── cavity.mat
 ├── final_models
 │   ├── 2025-02-06_19-25-14-069398
-│   │   ├── circuit.pdf
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── prediction.png
 │   ├── 2025-02-06_19-28-34-814985
-│   │   ├── circuit.pdf
-│   │   ├── model.pth
-│   │   └── output.log
 │   ├── 2025-02-09_00-01-28-238904
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── prediction.png
 │   ├── 2025-02-21_11-27-26-796633
-│   │   ├── circuit.pdf
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   └── prediction.png
 │   ├── 2025-02-21_11-44-19-583365
-│   │   ├── circuit.pdf
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── prediction.png
 │   ├── 2025-02-21_12-00-52-045180
-│   │   ├── circuit.pdf
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── tricontourf_10.pdf
 │   ├── 2025-02-24_20-00-46-837506
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── prediction.png
 │   ├── 2025-02-25_17-01-13-323053
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   ├── output.log
-│   │   └── prediction.png
 │   ├── 2025-02-25_17-03-12-608017
-│   │   ├── loss_history.pdf
-│   │   ├── model.pth
-│   │   └── output.log
-│   └── 2025-02-25_17-21-36-221407
-│       ├── model.pth
-│       └── output.log
+│   ├── 2025-02-25_17-21-36-221407
 ├── qcpinn.yaml
 └── src
     ├── contour_plots
