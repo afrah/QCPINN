@@ -1,20 +1,35 @@
-# About
+# QCPINN: Quantum-Classical Physics-Informed Neural Networks
 
-The code implements a Continuous Variable Quantum Neural Network(QCPINN), integrating PyTorch with PennyLane for quantum computations accorind to the paper [QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs](https://arxiv.org/abs/2503.16678)
+[![arXiv](https://img.shields.io/badge/arXiv-2503.16678-b31b1b.svg)](https://arxiv.org/abs/2503.16678)
+
+Source code of QCPINN described in the paper: [QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs](https://arxiv.org/abs/2503.16678).
+
+
+---
 
 
 ## Getting Started
 
+### Prerequisites
+
+[Anaconda/Miniconda](https://docs.conda.io/en/latest/miniconda.html) (recommended) or any other Python environment.
+
+### Installation
+
+Clone the repository and set up the environment:
+
 ```bash
-conda create -f qcpinn.yaml
+git clone https://github.com/afrah/QCPINN.git
+cd QCPINN
+conda env create -f qcpinn.yaml
 conda activate qcpinn
 ```
 
 ### Training Models
 
+Train models for different PDEs using the following commands:
 
 ```bash
-
 # Cavity
 python -m src.poisson.cavity_hybrid_trainer
 
@@ -29,149 +44,64 @@ python -m src.poisson.wave_hybrid_trainer
 
 # Diffusion
 python -m src.poisson.diffusion_hybrid_trainer
-
 ```
 
-Note: Used VS Code Jupyter to run the Notebooks
+Jupyter notebooks for training, testing, and visualization are in `src/notebooks/`.
 
+> **Note:** I used VS Code with the Jupyter extension for working on the notebooks.
 
 ## Inference
 
-### Cavity
+After training, generate plots and evaluate results:
+
+```bash
+# Cavity
 python -m src.contour_plots.cavity_hybrid_plotting
 
-### Helmholtz
+# Helmholtz
 python -m src.contour_plots.helmholtz_hybrid_plotting
 
-### Klein-Gordon
+# Klein-Gordon
 python -m src.contour_plots.klein_gordon_hybrid_plotting
 
-### Wave
+# Wave
 python -m src.contour_plots.wave_hybrid_plotting
 
-### Diffusion
+# Diffusion
 python -m src.contour_plots.diffusion_hybrid_plotting
+```
 
-## Code Structure
+Output plots and data will be saved in the appropriate results directory.
 
+## Project Structure
 
 ```
-.
-├── README.md
-├── data
-│   └── cavity.mat
-├── final_models
-│   ├── 2025-02-06_19-25-14-069398
-│   ├── 2025-02-06_19-28-34-814985
-│   ├── 2025-02-09_00-01-28-238904
-│   ├── 2025-02-21_11-27-26-796633
-│   ├── 2025-02-21_11-44-19-583365
-│   ├── 2025-02-21_12-00-52-045180
-│   ├── 2025-02-24_20-00-46-837506
-│   ├── 2025-02-25_17-01-13-323053
-│   ├── 2025-02-25_17-03-12-608017
-│   ├── 2025-02-25_17-21-36-221407
-├── qcpinn.yaml
-└── src
-    ├── contour_plots
-    │   ├── cavity_hybrid_plotting.py
-    │   ├── diffusion_hybrid_plotting.py
-    │   ├── draw_losses.ipynb
-    │   ├── helmholtz_hybrid_plotting.py
-    │   ├── klein_gordon_hybrid_plotting.py
-    │   ├── plotting_loss_history
-    │   │   ├── cavity_test.py
-    │   │   └── helmholtz_test.py
-    │   └── wave_hybrid_plotting.py
-    ├── data
-    │   ├── cavity_dataset.py
-    │   ├── diffusion_dataset.py
-    │   ├── helmholtz_dataset.py
-    │   ├── klein_gordon_dataset.py
-    │   └── wave_dataset.py
-    ├── nn
-    │   ├── pde.py
-    ├── notebooks
-    │   ├── CV
-    │   │   ├── cavity_hybrid_testing_CV_basic_cpu.ipynb
-    │   │   └── helmholtz_hybrid_testing_CV_basic_cpu.ipynb
-    │   ├── amplitude
-    │   │   ├── cavity_hybrid_testing_DV_amplitude_alternate.ipynb
-    │   │   ├── cavity_hybrid_testing_DV_amplitude_circuit19.ipynb
-    │   │   ├── cavity_hybrid_testing_DV_amplitude_circuit5.ipynb
-    │   │   ├── helmholtz_hybrid_testing_DV_amplitude_alternate.ipynb
-    │   │   ├── helmholtz_hybrid_testing_DV_amplitude_circuit5.ipynb
-    │   │   └── helmholtz_hybrid_testing_DV_amplitude_circuit9.ipynb
-    │   ├── check_for_cuda.ipynb
-    │   ├── classical
-    │   │   ├── cavity_hybrid_testing_classical.ipynb
-    │   │   └── helmholtz_hybrid_testing_classical.ipynb
-    │   ├── gpu
-    │   │   ├── cavity_hybrid_testing_CV_basic.ipynb
-    │   │   ├── cavity_hybrid_testing_CV_enhanced.ipynb
-    │   │   ├── helmholtz_hybrid_testing_CV_basic.ipynb
-    │   │   └── helmholtz_hybrid_testing_CV_enahnced.ipynb
-    │   ├── plotting
-    │   │   ├── cavity_loss_history.ipynb
-    │   │   ├── cavity_plot_loss_history.ipynb
-    │   │   ├── helmholtz_loss_history.ipynb
-    │   │   └── helmholtz_plot_loss_history.ipynb
-    │   ├── testing
-    │   │   ├── cavity_testing_angle_cir19.ipynb
-    │   │   ├── diffusion_gordon_testing_angle_cir19.ipynb
-    │   │   ├── helmholtz_testing_angle_cir19.ipynb
-    │   │   ├── klein_gordon_testing_angle_cir19.ipynb
-    │   │   ├── loss_history
-    │   │   │   ├── cavity_test.ipynb
-    │   │   │   └── helmholtz_test.ipynb
-    │   │   └── wave_test_angle_cir19.ipynb
-    │   └── training
-    │       ├── Klein_gordon_hybrid_training copy.ipynb
-    │       ├── Klein_gordon_hybrid_training_classic.ipynb
-    │       ├── cavity_hybrid_testing_CV.ipynb
-    │       ├── cavity_hybrid_training.ipynb
-    │       ├── cavity_hybrid_training_amplitude.ipynb
-    │       ├── diffusion_hybrid_training_classic.ipynb
-    │       ├── diffusion_hybrid_training_quantum.ipynb
-    │       ├── helmholtz_hybrid_testing_CV.ipynb
-    │       ├── helmholtz_hybrid_training.ipynb
-    │       ├── helmholtz_hybrid_training_amplitude.ipynb
-    │       ├── wave_hybrid_training.ipynb
-    │       └── wave_hybrid_training_classic.ipynb
-    ├── trainer
-    │   ├── CVNeuralNetwork.py
-    │   ├── CVNeuralNetwork2.py
-    │   ├── ECVQNN.py
-    │   ├── cavity_train.py
-    │   ├── classical_solver.py
-    │   ├── cv_solver.py
-    │   ├── cvquantum_layer.py
-    │   ├── diffusion_train.py
-    │   ├── dv_quantum_layer.py
-    │   ├── dv_solver.py
-    │   ├── helmholtz_train.py
-    │   ├── klein_gordon_train.py
-    │   └── wave_train.py
-    └── utils
-        ├── cavity_plot_contour.py
-        ├── cavity_plot_prediction.py
-        ├── cmap.py
-        ├── color.py
-        ├── common.py
-        ├── error_metrics.py
-        ├── functions.py
-        ├── get_default_args.py
-        ├── logger.py
-        ├── plot_loss.py
-        ├── plot_model_results.py
-        ├── plot_prediction.py
-        ├── plotting.py
-        └── utilities.py
+QCPINN/
+├── data/               # Cavity datasets from simulation
+├── models/             # Saved models from training
+├── qcpinn.yaml         # Conda environment file
+└── src/
+    ├── contour_plots/  # Plotting functions
+    ├── data/           # Data generator
+    ├── nn/             # Neural network modules
+    ├── notebooks/      # Jupyter notebooks (training, testing, visualization)
+    ├── trainer/        # Training scripts
+    └── utils/          # Utility functions and helpers
 ```
+
+> See the `src/notebooks/` folder for hands-on examples and further documentation.
 
 ## Support
 
-Please open an issue for support.
+If you encounter issues or have questions, please [open an issue](https://github.com/afrah/QCPINN/issues).
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+MIT [LICENSE](LICENSE)
 
 ## References
 
@@ -185,4 +115,3 @@ If you find this work useful, please consider citing:
   year={2025}
 }
 ```
-

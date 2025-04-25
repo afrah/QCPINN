@@ -137,10 +137,10 @@ def main():
     
     model_paths = {
     #     "angle_cascade": ("dv", "./log_files/checkpoints/cavity/2025-02-22_14-29-03-610093"),
-        "classical": ("classical", "./final_models/2025-02-25_17-21-36-221407"),
+        "classical": ("classical", "./models/2025-02-25_17-21-36-221407"),
 
     # old:
-        "angle_cascade": ("dv", "./final_models/2025-02-06_19-28-34-814985"),
+        "angle_cascade": ("dv", "./models/2025-02-06_19-28-34-814985"),
         # "classical": ("classical", "./log_files/checkpoints/cavity/2025-02-09_22-46-51-012656")
     }
 

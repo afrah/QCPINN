@@ -55,7 +55,7 @@ u_star = u(X_star, A1, A2)
 f_star = f(X_star, A1, A2, LAMBDA)
 
 model_path_angle_cascade = (
-    "./final_models/2025-02-06_19-25-14-069398"  # angle_cascade
+    "./models/2025-02-06_19-25-14-069398"  # angle_cascade
 )
 
 # model_path_classical = (
@@ -65,7 +65,7 @@ model_path_angle_cascade = (
 
 # #old
 model_path_classical = (
-    "./final_models/2025-02-09_00-01-28-238904"  # classical
+    "./models/2025-02-09_00-01-28-238904"  # classical
 )
 
 MODEL_PATHS = {

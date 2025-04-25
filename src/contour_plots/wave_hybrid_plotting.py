@@ -96,7 +96,7 @@ f_star = r(X_star, a, c)
 
 
 model_path_classical = (
-    "./final_models/2025-02-24_20-00-46-837506"  # classical
+    "./models/2025-02-24_20-00-46-837506"  # classical
 )
 
 # # old Model-2:
@@ -105,7 +105,7 @@ model_path_classical = (
 # )
 
 model_path_angle_cascade = (
-    "./final_models/2025-02-21_11-27-26-796633"  # old angle_cascade
+    "./models/2025-02-21_11-27-26-796633"  # old angle_cascade
 )
 
 

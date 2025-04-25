@@ -60,11 +60,11 @@ u_star = u(X_star)
 f_star = f(X_star, alpha, beta, gamma, k)
 
 model_path_angle_cascade = (
-    "./final_models/2025-02-21_11-44-19-583365"  # angle_cascade
+    "./models/2025-02-21_11-44-19-583365"  # angle_cascade
 )
 
 model_path_classical = (
-    "./final_models/2025-02-25_17-01-13-323053"  # classical
+    "./models/2025-02-25_17-01-13-323053"  # classical
 )
 
 

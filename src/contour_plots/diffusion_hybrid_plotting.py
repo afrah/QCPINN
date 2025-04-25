@@ -79,11 +79,11 @@ f_analytic = r(X_star).cpu().detach().numpy()
 
 
 model_path_angle_cascade = (
-    "./final_models/2025-02-21_12-00-52-045180"  # angle_cascade
+    "./models/2025-02-21_12-00-52-045180"  # angle_cascade
 )
 
 model_path_classical = (
-    "./final_models/2025-02-25_17-03-12-608017"  # classical
+    "./models/2025-02-25_17-03-12-608017"  # classical
 )
 
 
