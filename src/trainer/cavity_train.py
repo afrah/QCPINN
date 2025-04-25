@@ -1,11 +1,6 @@
 import random
 import time
 import torch
-import random
-import pennylane as qml
-import torch
-import torch.nn as nn
-import os
 
 from src.nn.pde import navier_stokes_2D_operator
 
@@ -136,7 +131,7 @@ def compute_losses(model):
 
 def train(model):
 
-    for it in range(model.epochs+1):
+    for it in range(model.epochs + 1):
         time_start = time.time()
         if model.optimizer is not None:
             model.optimizer.zero_grad()

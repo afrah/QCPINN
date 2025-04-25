@@ -1,18 +1,9 @@
 import pennylane as qml
-
-# from pennylane import numpy as np
 import torch
 import torch.nn as nn
-
-## Imports
 import os
-
-# from torch.optim.lr_scheduler import ReduceLROnPlateau
-
-# # from torchviz import make_dot
 import matplotlib.pyplot as plt
 
-# import pickle
 from src.utils.logger import Logging
 from src.poisson.dv_quantum_layer import DVQuantumLayer
 
@@ -34,7 +25,6 @@ class DVPDESolver(nn.Module):
         self.loss_history = []
         self.encoding = self.args.get("encoding", "angle")
         self.draw_quantum_circuit_flag = True
-        # self.targets = targets
         self.classic_network = self.args["classic_network"]  # [3, 50, 50, 50, 4] #
 
         if self.encoding == "amplitude":
@@ -56,22 +46,20 @@ class DVPDESolver(nn.Module):
             ).to(self.device)
 
         self.postprocessor = nn.Sequential(
-            nn.Linear(self.num_qubits, self.classic_network[-2]).to(
-                self.device
-            ),  
+            nn.Linear(self.num_qubits, self.classic_network[-2]).to(self.device),
             nn.Tanh(),
             nn.Linear(self.classic_network[-2], self.classic_network[-1]).to(
                 self.device
             ),
         ).to(self.device)
 
-        # 
+        #
         self.activation = nn.Tanh()
 
         # Quantum parameters
         self.num_qubits = args["num_qubits"]
         self.quantum_layer = DVQuantumLayer(self.args)
- 
+
         self.optimizer = torch.optim.Adam(
             filter(lambda p: p.requires_grad, self.parameters()), lr=self.args["lr"]
         )

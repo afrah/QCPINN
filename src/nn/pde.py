@@ -1,8 +1,10 @@
-import re
 import torch
 
 
 def navier_stokes_2D_operator(model, t, x, y, min_x=0, max_x=1):
+    """
+    Operator to compute residuals for the 2D Navier-Stokes equation
+    """
 
     mu = 0.00345
     DENSITY = 1056.0
@@ -39,10 +41,11 @@ def navier_stokes_2D_operator(model, t, x, y, min_x=0, max_x=1):
     return [continuity, f_u, f_v]
 
 
-# Operator to compute residuals
 def klein_gordon_operator(fluid_model, t, x, x_min=0.0, x_max=1.0):
+    """
+    Operator to compute residuals for the 1D Klein-Gordon equation
+    """
 
-    # Parameters of equations
     alpha = -1.0
     beta = 0.0
     gamma = 1.0
@@ -61,9 +64,10 @@ def klein_gordon_operator(fluid_model, t, x, x_min=0.0, x_max=1.0):
     return u, residual
 
 
-# Operator to compute residuals
 def wave_operator(model, t, x, sigma_t=1.0, sigma_x=1.0):
-
+    """
+    Operator to compute residuals for the 1D wave equation
+    """
     c = 2
     t.requires_grad = True
     x.requires_grad = True
@@ -78,20 +82,21 @@ def wave_operator(model, t, x, sigma_t=1.0, sigma_x=1.0):
     return u, residual
 
 
-# Operator to compute residuals for the 2D convection-diffusion equation
 def diffusion_operator(
     model, t, x, y, sigma_t=1.0, sigma_x=1.0, sigma_y=1.0, D=0.01, v_x=1.0, v_y=1.0
 ):
+    """
+    Operator to compute residuals for the 2D convection-diffusion equation
+    """
 
-    # Enable gradient tracking
     t.requires_grad = True
     x.requires_grad = True
     y.requires_grad = True
 
-    # Forward pass through the model
+    # forward pass through the model
     u = model(torch.cat((t, x, y), 1))
 
-    # Compute derivatives
+    # compute derivatives
     u_t = torch.autograd.grad(u, t, torch.ones_like(u), create_graph=True)[0] / sigma_t
     u_x = torch.autograd.grad(u, x, torch.ones_like(u), create_graph=True)[0] / sigma_x
     u_y = torch.autograd.grad(u, y, torch.ones_like(u), create_graph=True)[0] / sigma_y
@@ -105,29 +110,28 @@ def diffusion_operator(
         / sigma_y
     )
 
-    # Convection-diffusion equation residual
+    # convection-diffusion equation residual
     residual = u_t + v_x * u_x + v_y * u_y - D * (u_xx + u_yy)
 
     return u, residual
 
 
-# Operator for Helmholtz equation
 def helmholtz_operator(
     fluid_model,
     x1,
     x2,
 ):
+    """
+    Operator to compute residuals for the 2D helmholtz equation
+    """
+
     LAMBDA = 1.0
 
     x1.requires_grad_(True)
     x2.requires_grad_(True)
     u = fluid_model(torch.concatenate((x1, x2), 1))
-    # Compute gradients with respect to x1 and x2
 
-    # print(f"{u=}")
-    # print(f"{x1=}")
-    # print(f"{x2=}")
-
+    # compute gradients with respect to x1 and x2
     u_x1 = torch.autograd.grad(
         u, x1, grad_outputs=torch.ones_like(u), create_graph=True
     )[0]
@@ -146,7 +150,4 @@ def helmholtz_operator(
 
     residual = u_xx1 + u_xx2 + LAMBDA * u
 
-    # print(
-    #     f"{u.shape=}, {u_x1.shape=}, {u_x2.shape=}, {u_xx1.shape=}, {u_xx2.shape=}, {residual.shape=}"
-    # )
     return [u, residual]

@@ -1,22 +1,13 @@
-
-# from pennylane import numpy as np
 import torch
 import torch.nn as nn
-
-## Imports
 import os
 
-# from torch.optim.lr_scheduler import ReduceLROnPlateau
-
-# # from torchviz import make_dot
-
-# import pickle
 from src.utils.logger import Logging
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class Classical_Solver(nn.Module):
+class ClassicalSolver(nn.Module):
     def __init__(self, args, logger: Logging, data=None, device=DEVICE):
         super().__init__()
         self.logger = logger
@@ -31,7 +22,6 @@ class Classical_Solver(nn.Module):
         self.loss_history = []
         self.encoding = self.args.get("encoding", "angle")
         self.draw_quantum_circuit_flag = True
-        # self.targets = targets
         self.classic_network = self.args["classic_network"]  # [3, 50, 50, 50 , 4] #
 
         self.preprocessor = nn.Sequential(
@@ -139,6 +129,5 @@ class Classical_Solver(nn.Module):
             map_location = torch.device("cpu")
         with open(file_path, "rb") as f:
             state = torch.load(f, map_location=map_location)
-            # state = pickle.load(f)
         print(f"Model state loaded from {file_path}")
         return state

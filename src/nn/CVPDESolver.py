@@ -1,8 +1,5 @@
-from ast import arg
 import os
-
 from matplotlib import pyplot as plt
-import numpy as np
 import torch
 import torch.nn as nn
 import pennylane as qml
@@ -52,9 +49,9 @@ class CVPDESolver(nn.Module):
 
             self.logger.print("Using GSRandomCVQNN ")
 
-
         elif self.args.get("class", "CVNeuralNetwork") == "GSRandomCVQNN2":
             from src.poisson.GSRandomCVQNN2 import CVNeuralNetwork
+
             self.logger.print("Using GSRandomCVQNN2 ")
 
         elif self.args.get("class", "CVNeuralNetwork") == "ChebyshevSMCVQNN":
@@ -66,7 +63,6 @@ class CVPDESolver(nn.Module):
             from src.poisson.CVNeuralNetwork_cavity import CVNeuralNetwork
 
             self.logger.print("Using CVNeuralNetwork_cavity ")
-
 
         elif self.args.get("class", "CVNeuralNetwork") == "CVNeuralNetwork2":
             from src.poisson.CVNeuralNetwork2 import CVNeuralNetwork
@@ -100,16 +96,14 @@ class CVPDESolver(nn.Module):
         ).to(self.device)
 
         if self.args.get("class", "CVNeuralNetwork") == "GSRandomCVQNN2":
-        # Lower learning rate
-            self.optimizer = torch.optim.Adam(self.parameters(), lr=self.args["lr"])  # from 5e-3
+            # Lower learning rate
+            self.optimizer = torch.optim.Adam(
+                self.parameters(), lr=self.args["lr"]
+            )  # from 5e-3
 
             # Add learning rate scheduler
             self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-                self.optimizer,
-                mode='min',
-                factor=0.5,
-                patience=20,
-                min_lr=1e-6
+                self.optimizer, mode="min", factor=0.5, patience=20, min_lr=1e-6
             )
         else:
             self.optimizer = torch.optim.Adam(

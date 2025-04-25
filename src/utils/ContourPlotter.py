@@ -1,13 +1,11 @@
 import os
-
 import numpy as np
 import matplotlib.pyplot as plt
-
 from mpl_toolkits.axes_grid1 import ImageGrid
 from typing import List, Tuple
-# from mpl_toolkits.axes_grid1 import make_axes_locatable 
-
+ 
 from src.utils.cmap import orange_cmap2
+
 
 SOLUTION_MAP  = "rainbow"
 ERROR_MAP = orange_cmap2

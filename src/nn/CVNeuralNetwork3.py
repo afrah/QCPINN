@@ -6,7 +6,7 @@ import strawberryfields as sf
 from strawberryfields import ops
 
 
-class CVNeuralNetwork(nn.Module):
+class CVNeuralNetwork3(nn.Module):
     def __init__(
         self,
         num_qumodes: int,

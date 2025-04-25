@@ -1,21 +1,7 @@
 import time
-import pennylane as qml
-from pennylane import numpy as np
 import torch
-import torch.nn as nn
-
-## Imports
-import os
-import sys
-
-# from torchviz import make_dot
-import matplotlib.pyplot as plt
-import pickle
-from src.utils.logger import Logging
 from src.data.helmholtz_dataset import generate_training_dataset
 from src.nn.pde import helmholtz_operator
-
-# DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def fetch_minibatch(sampler, N):
@@ -64,7 +50,7 @@ def train(model):
         loss_bc4 = model.loss_fn(u_bc4_pred, u_bc4_batch)
 
         loss_bc = loss_bc1 + loss_bc2 + loss_bc3 + loss_bc4
-        if model.args["solver"] == "CV" :
+        if model.args["solver"] == "CV":
             loss = 0.1 * loss_r + 1 * (loss_bc)
         else:
             loss = loss_r + 10.0 * (loss_bc)
@@ -88,7 +74,7 @@ def train(model):
             model.save_state()
         return loss
 
-    for it in range(model.epochs +1):
+    for it in range(model.epochs + 1):
         loss = objective_fn(it)
         # print(f"{loss.item()=}")
         loss.backward(retain_graph=True)

@@ -1,11 +1,7 @@
-from matplotlib import pyplot as plt
-import matplotlib
 import pylab as py
-# from qiskit.visualization import plot_histogram
+import matplotlib.pyplot as plt
 
-import numpy as np
-import os
-# Defining custom plotting functions
+
 def plt_contourf(x, y, F, ttl):
     py.contourf(x, y, F, 41, cmap="inferno")
     py.colorbar()
@@ -54,29 +50,38 @@ def plot_custom_histogram(sncounts1, width, height, file_name, font_size=10):
     # Save and display
     plt.savefig("plot_histogram_identity.pdf", bbox_inches="tight")
 
+
 def plot_results(u_analytical, u_approximate, x_axis, y_axis, title, file_name):
     fig, axs = plt.subplots(1, 2, figsize=(14, 6), constrained_layout=True)
-    
+
     # Plot analytical solution
-    c1 = axs[0].contourf(x_axis, y_axis, u_analytical.reshape(x_axis.shape[0],
-                                                              y_axis.shape[0]),
-                                                              levels=50, cmap="inferno")
+    c1 = axs[0].contourf(
+        x_axis,
+        y_axis,
+        u_analytical.reshape(x_axis.shape[0], y_axis.shape[0]),
+        levels=50,
+        cmap="inferno",
+    )
     axs[0].set_title(title[0], fontsize=14)
-    axs[0].set_xlabel('x', fontsize=12)
-    axs[0].set_ylabel('y', fontsize=12)
-    axs[0].tick_params(axis='both', which='major', labelsize=10)
-    cbar1 = fig.colorbar(c1, ax=axs[0], orientation='vertical', shrink=0.8, pad=0.02)
+    axs[0].set_xlabel("x", fontsize=12)
+    axs[0].set_ylabel("y", fontsize=12)
+    axs[0].tick_params(axis="both", which="major", labelsize=10)
+    cbar1 = fig.colorbar(c1, ax=axs[0], orientation="vertical", shrink=0.8, pad=0.02)
     cbar1.ax.tick_params(labelsize=10)
 
     # Plot approximate solution
-    c2 = axs[1].contourf(x_axis, y_axis, u_approximate.reshape(x_axis.shape[0],
-                                                               y_axis.shape[0]),
-                                                               levels=50, cmap="inferno")
+    c2 = axs[1].contourf(
+        x_axis,
+        y_axis,
+        u_approximate.reshape(x_axis.shape[0], y_axis.shape[0]),
+        levels=50,
+        cmap="inferno",
+    )
     axs[1].set_title(title[1], fontsize=14)
-    axs[1].set_xlabel('x', fontsize=12)
-    axs[1].set_ylabel('y', fontsize=12)
-    axs[1].tick_params(axis='both', which='major', labelsize=10)
-    cbar2 = fig.colorbar(c2, ax=axs[1], orientation='vertical', shrink=0.8 , pad=0.02 )
+    axs[1].set_xlabel("x", fontsize=12)
+    axs[1].set_ylabel("y", fontsize=12)
+    axs[1].tick_params(axis="both", which="major", labelsize=10)
+    cbar2 = fig.colorbar(c2, ax=axs[1], orientation="vertical", shrink=0.8, pad=0.02)
     cbar2.ax.tick_params(labelsize=10)
 
     # Save the figure
@@ -113,10 +118,10 @@ def plot_exact_solution2(u, x_axis, y_axis, size, title, file_name):
 
     # Save and display the plot
     plt.savefig(file_name, bbox_inches="tight")
-    plt.close('all' , )
+    plt.close(
+        "all",
+    )
 
-import matplotlib.pyplot as plt
-import numpy as np
 
 def plot_training_dataset(data, file_path):
     """
@@ -137,11 +142,51 @@ def plot_training_dataset(data, file_path):
     fig, ax = plt.subplots(figsize=(10, 8))
 
     # Plot each region with distinct markers and colors
-    scatter_left = ax.scatter(left_X[:, 0], left_X[:, 1], c=left_u, s=20, cmap="viridis", label="Left Boundary", marker="o")
-    scatter_right = ax.scatter(right_X[:, 0], right_X[:, 1], c=right_u, s=20, cmap="viridis", label="Right Boundary", marker="s")
-    scatter_bottom = ax.scatter(bottom_X[:, 0], bottom_X[:, 1], c=bottom_u, s=20, cmap="viridis", label="Bottom Boundary", marker="^")
-    scatter_top = ax.scatter(top_X[:, 0], top_X[:, 1], c=top_u, s=20, cmap="viridis", label="Top Boundary", marker="v")
-    scatter_interior = ax.scatter(interior_X[:, 0], interior_X[:, 1], c=interior_u, s=10, cmap="viridis", label="Interior", marker="*")
+    scatter_left = ax.scatter(
+        left_X[:, 0],
+        left_X[:, 1],
+        c=left_u,
+        s=20,
+        cmap="viridis",
+        label="Left Boundary",
+        marker="o",
+    )
+    scatter_right = ax.scatter(
+        right_X[:, 0],
+        right_X[:, 1],
+        c=right_u,
+        s=20,
+        cmap="viridis",
+        label="Right Boundary",
+        marker="s",
+    )
+    scatter_bottom = ax.scatter(
+        bottom_X[:, 0],
+        bottom_X[:, 1],
+        c=bottom_u,
+        s=20,
+        cmap="viridis",
+        label="Bottom Boundary",
+        marker="^",
+    )
+    scatter_top = ax.scatter(
+        top_X[:, 0],
+        top_X[:, 1],
+        c=top_u,
+        s=20,
+        cmap="viridis",
+        label="Top Boundary",
+        marker="v",
+    )
+    scatter_interior = ax.scatter(
+        interior_X[:, 0],
+        interior_X[:, 1],
+        c=interior_u,
+        s=10,
+        cmap="viridis",
+        label="Interior",
+        marker="*",
+    )
 
     # Plot details
     ax.set_xlabel("X", fontsize=12)
@@ -158,5 +203,7 @@ def plot_training_dataset(data, file_path):
 
     # Save the plot
     plt.tight_layout()
-    plt.savefig(file_path, format="pdf", dpi=300)  # Save in PDF format with high resolution
+    plt.savefig(
+        file_path, format="pdf", dpi=300
+    )  # Save in PDF format with high resolution
     plt.close()  # Close the plot to free memory

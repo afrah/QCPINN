@@ -2,12 +2,8 @@ import pennylane as qml
 import torch
 import torch.nn as nn
 
-import numpy as np
-import strawberryfields as sf
-from strawberryfields import ops
 
-
-class CVNeuralNetwork(nn.Module):
+class CVNeuralNetwork1(nn.Module):
     """
     Implementation of CV Neural Network based on https://arxiv.org/pdf/1806.06871
     Following equation 26 structure: Linear -> Non-linear -> Linear
@@ -25,13 +21,8 @@ class CVNeuralNetwork(nn.Module):
         self.num_layers = num_layers
         self.cutoff_dim = cutoff_dim
         self.device = device
-        active_sd = 0.1
-        passive_sd = (2 * np.pi)
-        # Initialize trainable parameters
-        # self.weights = self._initialize_weights()
-
-        # Initialize trainable parameters
-        # Parameters for interferometers (linear transformations)
+        active_sd = 0.0001
+        passive_sd = 0.1
 
         self.num_interfermoter_params = int(
             self.num_qumodes * (self.num_qumodes - 1)
@@ -56,7 +47,7 @@ class CVNeuralNetwork(nn.Module):
             torch.randn(num_layers, num_qumodes, device=self.device) * passive_sd,
             requires_grad=True,
         )
-        # Parameters for non-linear transformations
+        # add parameters for non-linear transformations
         self.displacement_r = nn.Parameter(
             torch.randn(num_layers, num_qumodes, device=self.device) * active_sd,
             requires_grad=True,
@@ -65,31 +56,25 @@ class CVNeuralNetwork(nn.Module):
             torch.randn(num_layers, num_qumodes, device=self.device) * passive_sd,
             requires_grad=True,
         )
-        # Add Kerr parameters
+        # add Kerr parameters
         self.kerr_params = nn.Parameter(
             torch.randn(num_layers, num_qumodes, device=self.device) * active_sd,
             requires_grad=True,
         )
-        # Create quantum device
+        # create quantum device
         self.dev = qml.device(
             "strawberryfields.fock", wires=num_qumodes, cutoff_dim=cutoff_dim
         )
-
-        # Create quantum node
+        # create quantum node
         self.circuit = qml.QNode(self._quantum_circuit, self.dev, interface="torch")
 
         self.activation = nn.Tanh()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        # Forward pass through the quantum neural network
-        #"""
-        
         return torch.stack([self.circuit(sample) for sample in x])
 
     def _quantum_circuit(self, inputs):
-        # Encode input x into quantum state
-        # Encode inputs
+        # encode input x into quantum state
         for i, input_val in enumerate(inputs):
             # print(f"input_val: {input_val}")
             qml.Displacement(input_val, 0.0, wires=i)
@@ -99,7 +84,7 @@ class CVNeuralNetwork(nn.Module):
             self.qnn_layer(layer_idx)
 
         return [
-            qml.expval(qml.QuadOperator(wires=wire, phi=0.0)) for wire in range(self.num_qumodes)
+            qml.expval(qml.NumberOperator(wire)) for wire in range(self.num_qumodes)
         ]
 
     def qnn_layer(self, layer_idx):
@@ -112,8 +97,6 @@ class CVNeuralNetwork(nn.Module):
                 is to be applied to
         """
 
-        # qumode_list = list(range(self.num_qumodes))
-
         self.interferometer(self.theta_1[layer_idx])
 
         for wire in range(self.num_qumodes):
@@ -122,12 +105,6 @@ class CVNeuralNetwork(nn.Module):
                 self.squeezing_phi[layer_idx, wire],
                 wires=wire,
             )
-            # qml.Squeezing(
-            #     self.squeezing_r[layer_idx, wire],
-            #     0.0,
-            #     wires=wire,
-            # )
-            # ops.Sgate(s[i]) | q[i]
 
         self.interferometer(self.theta_2[layer_idx])
 
@@ -168,16 +145,15 @@ class CVNeuralNetwork(nn.Module):
             qml.Rotation(rphi[0], wires=0)
             return
 
-        n = 0  # keep track of free parameters
+        # keep track of free parameters
+        n = 0
 
-        # Apply the rectangular beamsplitter array
-        # The array depth is N
+        # apply the rectangular beamsplitter array of depth N
         for l in range(self.num_qumodes):
             for k, (q1, q2) in enumerate(zip(qumode_list[:-1], qumode_list[1:])):
                 # skip even or odd pairs depending on layer
                 if (l + k) % 2 != 1:
-                    qml.Beamsplitter(theta[n], 
-                                     phi[n], wires=[q1, q2])
+                    qml.Beamsplitter(theta[n], phi[n], wires=[q1, q2])
                     n += 1
 
         # apply the final local phase shifts to all modes except the last one
