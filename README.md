@@ -14,14 +14,22 @@ conda activate qnn4pde
 
 
 ```bash
+conda activate QCPINN
+
 # Cavity
-python src/poisson/cavity_train.py
+python -m src.poisson.cavity_hybrid_trainer
 
 # Helmholtz
-python src/poisson/helmholtz_train.py
+python -m src.poisson.helmholtz_hybrid_trainer
 
 # Cavity-Hybrid
-python src/poisson/cavity_hybrid_trainer.py
+python -m src.poisson.klein_gordon_hybrid_trainer
+
+# Wave
+python -m src.poisson.wave_hybrid_trainer
+
+# Diffusion
+python -m src.poisson.diffusion_hybrid_trainer
 
 ```
 
@@ -76,13 +84,13 @@ Please open an issue for support.
 
 ## References
 
-Please cite our paper as:
+If you find this work useful, please consider citing:
 
 ```bibtex
-@article{farea2025pihcqnn,
-  title={PI-HCQNN: Physics-Informed Hybrid Classical-Quantum Neural Networks for PDEs},
-  author={Farea, Afrah and Khan, Saiful and others},
-  journal={arXiv preprint arXiv:2504.10971},
+@article{farea2025qcpinn,
+  title={QCPINN: Quantum Classical Physics-Informed Neural Networks for Solving PDEs},
+  author={Farea, Afrah and Khan, Saiful and Celebi, Mustafa Serdar},
+  journal={arXiv preprint arXiv:2503.16678},
   year={2025}
 }
 ```
