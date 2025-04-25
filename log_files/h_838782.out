@@ -1,0 +1,24 @@
+date :
+/okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+Model state loaded from /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files/checkpoints/wave/2025-02-24_20-00-46-837506/model.pth
+Model state loaded from /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files/checkpoints/wave/2025-02-21_11-27-26-796633/model.pth
+The circuit is saved in testing_checkpoints/wave/2025-03-08_00-57-50-226119
+
+Loss values at iteration 12500:
+----------------------------------------
+classical           : 0.051791
+angle_cascade       : 0.065036
+----------------------------------------
+
+print ==========================================
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+            838782   core40q  qnn4pde   afarea  R       5:29      1 s215
+print SLURM_JOB_ID = 838782
+print SLURM_JOB_NODELIST = s215
+print SLURM_SUBMIT_HOST = sariyer
+print SLURM_SUBMIT_DIR = /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+print SLURM_JOB_NUM_NODES = 1
+print SLURM_CPUS_ON_NODE = 40
+print SLURM_NTASKS = 1
+print SLURM_NODEID = 0
+print ==========================================

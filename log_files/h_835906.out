@@ -1,0 +1,34 @@
+date :
+/okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-12_16-32-09-851527/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_19-28-34-814985/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_19-28-52-910332/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_19-27-57-462145/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-12_16-32-09-865339/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_18-44-40-359259/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_18-29-51-200273/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_18-41-52-938544/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/cavity/2025-02-13_22-13-09-256519
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-06_22-52-49-345794/model.pth
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-12_17-34-26-978340/model.pth
+Model state loaded from ../log_files/checkpoints/cavity/2025-02-09_22-46-51-012656/model.pth
+
+print ==========================================
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+            835906   core40q  qnn4pde   afarea  R       5:55      1 s233
+print SLURM_JOB_ID = 835906
+print SLURM_JOB_NODELIST = s233
+print SLURM_SUBMIT_HOST = sariyer
+print SLURM_SUBMIT_DIR = /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+print SLURM_JOB_NUM_NODES = 1
+print SLURM_CPUS_ON_NODE = 40
+print SLURM_NTASKS = 1
+print SLURM_NODEID = 0
+print ==========================================

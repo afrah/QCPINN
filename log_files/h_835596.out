@@ -1,0 +1,36 @@
+date :
+/okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-10_17-56-20-522646/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-10_17-58-32-556716/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_19-25-14-069398/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_19-32-04-408294/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_19-25-14-069609/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_18-54-03-851796/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_18-52-46-865258/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_18-48-39-607215/model.pth
+The circuit is saved in /okyanus/users/afarea/afrah/code/QNN4PDEs/testing_checkpoints/helmholtz/2025-02-11_18-21-01-922538
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-06_18-10-42-119955/model.pth
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-09_20-05-25-094982/model.pth
+Model state loaded from ../log_files/checkpoints/helmholtz/2025-02-09_00-01-28-238904/model.pth
+Error creating plot configuration: 'ampl_layered'
+Error in main execution: 'ampl_layered'
+
+print ==========================================
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+            835596      defq  qnn4pde   afarea  R       7:32      1 s008
+print SLURM_JOB_ID = 835596
+print SLURM_JOB_NODELIST = s008
+print SLURM_SUBMIT_HOST = sariyer
+print SLURM_SUBMIT_DIR = /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+print SLURM_JOB_NUM_NODES = 1
+print SLURM_CPUS_ON_NODE = 28
+print SLURM_NTASKS = 1
+print SLURM_NODEID = 0
+print ==========================================

@@ -175,3 +175,4 @@ cython_debug/
 
 ./checkpoints
 ./log_files
+./testing_checkpoints

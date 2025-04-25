@@ -1,0 +1,15 @@
+date :
+/okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+
+print ==========================================
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+            836556   core40q  qnn4pde   afarea  R       3:47      1 s208
+print SLURM_JOB_ID = 836556
+print SLURM_JOB_NODELIST = s208
+print SLURM_SUBMIT_HOST = sariyer
+print SLURM_SUBMIT_DIR = /okyanus/users/afarea/afrah/code/QNN4PDEs/log_files
+print SLURM_JOB_NUM_NODES = 1
+print SLURM_CPUS_ON_NODE = 40
+print SLURM_NTASKS = 1
+print SLURM_NODEID = 0
+print ==========================================
