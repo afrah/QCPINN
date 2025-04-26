@@ -23,7 +23,7 @@ class CVNeuralNetwork2(nn.Module):
         self.cutoff_dim = cutoff_dim
         self.device = device
         active_sd = 0.1
-        passive_sd = (2 * np.pi)
+        passive_sd = 2 * np.pi
         # Initialize trainable parameters
         # self.weights = self._initialize_weights()
 
@@ -81,7 +81,7 @@ class CVNeuralNetwork2(nn.Module):
         """
         # Forward pass through the quantum neural network
         #"""
-        
+
         return torch.stack([self.circuit(sample) for sample in x])
 
     def _quantum_circuit(self, inputs):
@@ -96,7 +96,8 @@ class CVNeuralNetwork2(nn.Module):
             self.qnn_layer(layer_idx)
 
         return [
-            qml.expval(qml.QuadOperator(wires=wire, phi=0.0)) for wire in range(self.num_qumodes)
+            qml.expval(qml.QuadOperator(wires=wire, phi=0.0))
+            for wire in range(self.num_qumodes)
         ]
 
     def qnn_layer(self, layer_idx):
@@ -173,8 +174,7 @@ class CVNeuralNetwork2(nn.Module):
             for k, (q1, q2) in enumerate(zip(qumode_list[:-1], qumode_list[1:])):
                 # skip even or odd pairs depending on layer
                 if (l + k) % 2 != 1:
-                    qml.Beamsplitter(theta[n], 
-                                     phi[n], wires=[q1, q2])
+                    qml.Beamsplitter(theta[n], phi[n], wires=[q1, q2])
                     n += 1
 
         # apply the final local phase shifts to all modes except the last one

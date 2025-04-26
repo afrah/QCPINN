@@ -2,14 +2,13 @@ import sys
 import os
 import torch
 import numpy as np
-from typing import Dict, Tuple, List, Any
+from typing import Dict, Tuple, Any
 
 
 from src.utils.logger import Logging
 from src.utils.plot_loss import plot_loss_history
 from src.nn.DVPDESolver import DVPDESolver
 from src.nn.CVPDESolver import CVPDESolver
-from src.nn.ClassicalSolver import ClassicalSolver
 from src.nn.pde import helmholtz_operator
 from src.data.helmholtz_dataset import u, f
 

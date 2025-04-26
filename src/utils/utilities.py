@@ -1,7 +1,7 @@
 import numpy as np
 
 PLOT_STYLES = {
-    "amp_layered": "-", 
+    "amp_layered": "-",
     "angle_layered": "-",
     "amp_cascade": "-",
     "amp_alternate": "-",
@@ -29,8 +29,6 @@ def feature_scaling(prediction, exact, target_min, target_max):
     """
     min_exp = prediction.min()
     max_exp = prediction.max()
-
-    # perform normal feature scaling
     shifted_values = [
         (exp - min_exp) / (max_exp - min_exp) * (target_max - target_min) + target_min
         for exp in prediction
@@ -49,14 +47,9 @@ def z_score_normalize(values):
     Returns:
         array-like: Z-Score normalized values.
     """
-    # convert input to numpy array for convenience
     values = np.array(values)
-
-    # calculate the mean and standard deviation
     mean = np.mean(values)
     std_dev = np.std(values)
-
-    # apply z-score normalization
     z_scores = (values - mean) / std_dev
 
     return z_scores

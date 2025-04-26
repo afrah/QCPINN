@@ -1,13 +1,7 @@
-import torch
-
 import os
-import sys
+import torch
 import matplotlib.pyplot as plt
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), "../../"))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+import numpy as np
 
 from src.utils.logger import Logging
 from src.nn.pde import helmholtz_operator

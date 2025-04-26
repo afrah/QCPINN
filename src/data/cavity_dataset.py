@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-from torch.utils.data import Dataset
 import h5py
 import pandas as pd
 
@@ -43,8 +42,6 @@ class CavityDatasetFromFile(object):
                 initial.shape[0],
             ]
         )
-
-        # convert to tensor
 
         self.min_x = torch.tensor(
             np.min(domain[:, 0:3], axis=0), dtype=torch.float32
@@ -125,7 +122,6 @@ def process_file(
     initialP=0.15,
     dist="Sobol",
 ):
-
     # pleft, pRight, pBottom, pUp, pDomain, pInitial
     np.random.seed(42)
     percents = [domainP, sensorP, leftP, rightP, bottomP, upP, initialP]

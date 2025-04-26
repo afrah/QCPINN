@@ -1,6 +1,4 @@
 import re
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 def extract_loss_values_cavity(filename):
@@ -29,12 +27,10 @@ def extract_loss_values_cavity(filename):
 
 
 def extract_loss_values_helmholtz(filename):
-
     iterations = []
     loss_r_values = []
     loss_bc_values = []
 
-    # Regular expression pattern to match the loss values
     pattern = (
         r"Iteration: (\d+), loss_r = ([\d.]+)e\+(\d+) ,\s+loss_bc = ([\d.]+)e-([\d]+)"
     )

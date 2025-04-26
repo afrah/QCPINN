@@ -83,7 +83,6 @@ class CVQuantumLayer(nn.Module):
             qml.Displacement(inputs[i], 0.0, wires=i)
 
         for layer in range(self.num_layers):
-
             for wire in range(self.num_qubits):
                 #
                 qml.Displacement(
@@ -99,7 +98,6 @@ class CVQuantumLayer(nn.Module):
                 )
 
             for wire in range(self.num_qubits - 1):
-
                 qml.Beamsplitter(
                     torch.sigmoid(beamsplitter[layer, wire, 0]),
                     beamsplitter[layer, wire, 1],

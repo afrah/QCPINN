@@ -1,9 +1,7 @@
-from pennylane import numpy as np
 import torch
 import os
-import sys
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 from src.utils.logger import Logging
 from src.nn.pde import wave_operator

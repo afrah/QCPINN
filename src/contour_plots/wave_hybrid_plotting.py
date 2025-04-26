@@ -1,16 +1,6 @@
 import numpy as np
 import os
-import sys
-import pennylane as qml
-from pennylane import numpy as pnp
 import torch
-import torch.nn as nn
-
-
-import matplotlib
-
-import shutil
-import matplotlib.pyplot as plt
 
 from src.utils.plot_loss import plot_loss_history
 from src.nn.DVPDESolver import DVPDESolver
@@ -27,7 +17,7 @@ logger = Logging(log_path)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Test data
-# Define PINN model
+
 a = torch.tensor(0.5, dtype=torch.float32, device=DEVICE)
 c = torch.tensor(2.0, dtype=torch.float32, device=DEVICE)
 
@@ -52,21 +42,28 @@ coll_sampler = Sampler(2, dom_coords, lambda x: u(x, a, c), device=DEVICE)
 
 # Create mesh grid with float32
 number_of_points = 100
-t = np.linspace(dom_coords[0, 0], dom_coords[1, 0], number_of_points, dtype=np.float32)[:, None]
-x = np.linspace(dom_coords[0, 1], dom_coords[1, 1], number_of_points, dtype=np.float32)[:, None]
+t = np.linspace(dom_coords[0, 0], dom_coords[1, 0], number_of_points, dtype=np.float32)[
+    :, None
+]
+x = np.linspace(dom_coords[0, 1], dom_coords[1, 1], number_of_points, dtype=np.float32)[
+    :, None
+]
 t, x = np.meshgrid(t, x)
 
 # Convert to PyTorch tensor with float32
-X_star = torch.hstack((
-    torch.from_numpy(t.flatten()[:, None]), 
-    torch.from_numpy(x.flatten()[:, None])
-)).to(DEVICE).to(torch.float32)
+X_star = (
+    torch.hstack(
+        (torch.from_numpy(t.flatten()[:, None]), torch.from_numpy(x.flatten()[:, None]))
+    )
+    .to(DEVICE)
+    .to(torch.float32)
+)
 
 
 u_star = u(X_star, a, c)
 f_star = r(X_star, a, c)
 
-#new angle cascade 2025-02-24_20-15-02-259948
+# new angle cascade 2025-02-24_20-15-02-259948
 
 # model_path_angle_cascade = (
 #     "./log_files/checkpoints/wave/2025-02-24_20-15-02-259948"  # angle_cascade
@@ -78,18 +75,14 @@ f_star = r(X_star, a, c)
 # )
 
 
-model_path_classical = (
-    "./models/2025-02-24_20-00-46-837506"  # classical
-)
+model_path_classical = "./models/2025-02-24_20-00-46-837506"  # classical
 
 # # old Model-2:
 # model_path_classical = (
 #     "./log_files/checkpoints/wave/2025-02-21_11-10-55-994086"  # classical
 # )
 
-model_path_angle_cascade = (
-    "./models/2025-02-21_11-27-26-796633"  # old angle_cascade
-)
+model_path_angle_cascade = "./models/2025-02-21_11-27-26-796633"  # old angle_cascade
 
 
 MODEL_DIRS = {
@@ -99,7 +92,7 @@ MODEL_DIRS = {
 
 data = X_star
 
-results  = {}
+results = {}
 all_loss_history = {}
 
 for model_name, (solver, model_path) in MODEL_DIRS.items():
@@ -112,20 +105,22 @@ for model_name, (solver, model_path) in MODEL_DIRS.items():
         model.postprocessor.load_state_dict(state["postprocessor"])
         model.quantum_layer.load_state_dict(state["quantum_layer"])
         model.logger.print(f"Using DV Solver")
-  
+
     elif solver == "Classical":
         state = ClassicalSolver.load_state(model_path)
-            
-        if 'hidden_network' in state:
+
+        if "hidden_network" in state:
             from src.nn.ClassicalSolver2 import ClassicalSolver2
+
             state = ClassicalSolver2.load_state(model_path)
             model = ClassicalSolver2(state["args"], logger, data, DEVICE)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.hidden.load_state_dict(state["hidden_network"])
             model.postprocessor.load_state_dict(state["postprocessor"])
-        
+
         else:
             from src.nn.ClassicalSolver import ClassicalSolver
+
             model = ClassicalSolver(state["args"], logger, data, DEVICE)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.postprocessor.load_state_dict(state["postprocessor"])
@@ -166,10 +161,10 @@ for model_name, (solver, model_path) in MODEL_DIRS.items():
     model.logger.print(f"Total number of parameters: {total_params}")
 
     results[model_name] = u_pred
-    all_loss_history[model_name] = state['loss_history']
+    all_loss_history[model_name] = state["loss_history"]
     del model
 
-# Plot predictions
+
 plt_model_results(
     logger,
     X,
@@ -187,4 +182,3 @@ plot_loss_history(
     y_max=10,
     legend=False,
 )
-

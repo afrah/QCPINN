@@ -11,7 +11,6 @@ def fetch_minibatch(sampler, N):
 
 
 def train(model, nIter=10000, batch_size=128, log_NTK=False, update_lam=False):
-
     [ics_sampler, bcs_sampler, res_sampler] = generate_training_dataset(model.device)
 
     def objective_fn(it):
@@ -61,7 +60,6 @@ def train(model, nIter=10000, batch_size=128, log_NTK=False, update_lam=False):
 
         # Print
         if it % model.args["print_every"] == 0:
-
             model.logger.print(
                 "It: %d, Loss: %.3e, Loss_res: %.3e,  Loss_bcs: %.3e, Loss_ut_ics: %.3e, lr: %.3e, Time: %.2e"
                 % (

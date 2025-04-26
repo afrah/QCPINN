@@ -1,11 +1,7 @@
-import pennylane as qml
-from pennylane import numpy as np
 import torch
-import torch.nn as nn
 import os
-import sys
 import matplotlib.pyplot as plt
-import pickle
+import numpy as np
 
 
 from src.utils.logger import Logging

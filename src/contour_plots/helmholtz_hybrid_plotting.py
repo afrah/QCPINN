@@ -16,7 +16,7 @@ log_path = "testing_checkpoints/helmholtz"
 logger = Logging(log_path)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Test data
+
 num_points = 80
 A1 = 1
 A2 = 4

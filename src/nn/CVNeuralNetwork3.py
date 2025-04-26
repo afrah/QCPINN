@@ -1,9 +1,6 @@
 import pennylane as qml
 import torch
 import torch.nn as nn
-import numpy as np
-import strawberryfields as sf
-from strawberryfields import ops
 
 
 class CVNeuralNetwork3(nn.Module):

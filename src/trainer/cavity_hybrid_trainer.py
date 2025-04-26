@@ -1,13 +1,9 @@
-import pennylane as qml
-from pennylane import numpy as np
 import torch
-import torch.nn as nn
 import os
-import sys
 import matplotlib.pyplot as plt
 import h5py
 import pandas as pd
-
+import numpy as np
 
 from src.utils.logger import Logging
 from src.data.cavity_dataset import CavityDatasetFromFile
@@ -16,8 +12,7 @@ from src.utils.error_metrics import lp_error
 from src.trainer import cavity_train
 from src.nn.DVPDESolver import DVPDESolver
 from src.nn.CVPDESolver import CVPDESolver
-from src.nn.ClassicalSolver import ClassicalSolver
-
+from src.nn.ClassicalSolver2 import ClassicalSolver2
 
 mode = "hybrid"
 num_qubits = 2
@@ -29,7 +24,7 @@ cutoff_dim = 20
 classic_network = [input_dim, hidden_dim, output_dim]
 
 
-DEVICE = "cpu"  # torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 args = {
     "batch_size": 64,

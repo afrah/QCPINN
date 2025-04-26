@@ -1,11 +1,7 @@
 import os
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
 import numpy as np
 from matplotlib.ticker import FormatStrFormatter
-from mpl_toolkits.axes_grid1 import make_axes_locatable  # Add this import
-
-from scipy.interpolate import griddata
 
 
 def plt_prediction(logger, X_star, u_star, u_pred, f_star, f_pred):
@@ -39,18 +35,14 @@ def plt_prediction(logger, X_star, u_star, u_pred, f_star, f_pred):
     fig, axs = plt.subplots(2, 3, figsize=(18, 10))  # 2 rows, 3 columns
     content = ["exact", "predicted", "error"]
 
-    # Create regular grid for contour plotting
     x_unique = np.unique(X_star[:, 0])
     y_unique = np.unique(X_star[:, 1])
     X, Y = np.meshgrid(x_unique, y_unique)
 
     for row, (key, value) in enumerate(data.items()):
-        # Loop over the three columns for exact, predicted, and error
         for col, field in enumerate(content):
-            # Reshape the data to match the grid
             Z = value[field].reshape(len(y_unique), len(x_unique))
 
-            # Create contour plot
             contour = axs[row, col].contourf(
                 X,
                 Y,
@@ -93,7 +85,6 @@ def plot_contour(
     """ """
     fig, axs = plt.subplots(1, 1, figsize=(5, 4))
 
-    # Min & max for contour labels
     min_val = np.min(u_star)
     max_val = np.max(u_star)
     if min_val == max_val == 0:
@@ -116,20 +107,15 @@ def plot_contour(
         axs.set_xlabel(xy_labels[0], fontsize=18, color="grey")
         axs.set_ylabel(xy_labels[1], fontsize=18, color="grey")
 
-    # Set tick parameters
     axs.tick_params(axis="both", which="major", labelsize=14, colors="grey")
 
-    # 4 ticks, reduce gap between color-bar & contour
     cbar = fig.colorbar(
         contour, ax=axs, ticks=np.linspace(min_val, max_val, 4), pad=0.01
     )
-    cbar.ax.yaxis.set_major_formatter(
-        FormatStrFormatter("%.2f")
-    )  # use non-scientific notation
+    cbar.ax.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
     cbar.ax.tick_params(labelsize=14, colors="grey")
-    cbar.outline.set_visible(False)  # remove the outer border from the color bar
+    cbar.outline.set_visible(False)
 
-    # Remove the outer box of the plot
     axs.spines["top"].set_visible(False)
     axs.spines["right"].set_visible(False)
     axs.spines["left"].set_visible(False)
@@ -155,28 +141,22 @@ def grid_one_contour_plots_regular(
     fontsize=3,
     labelsize=3,
 ):
-
-    # CREATE FIGURE AND AXIS
     fig, ax = plt.subplots(figsize=(img_width, img_height))
 
-    # DETERMINE MIN AND MAX VALUES FOR CONTOUR LEVELS
     min_ = np.min(data)
     max_ = np.max(data)
     if min_ == max_ == 0:
         min_ += -1e-16
         max_ += 1e-6
 
-    # CONTOUR PLOT CONFIGURATION
     levels = np.linspace(min_, max_, 60)
     contour = ax.contourf(x, y, data, levels=levels, cmap="jet", vmin=min_, vmax=max_)
 
-    # ADD COLORBAR
     cbar = fig.colorbar(
         contour, ax=ax, ticks=np.linspace(min_, max_, ticks), format="%.1e"
     )
     cbar.ax.tick_params(labelsize=labelsize)
 
-    # AXIS LABELS AND TICKS
     if plot_xy:
         ax.set_xlabel(xy_labels[0], fontsize=fontsize)
         ax.set_ylabel(xy_labels[1], fontsize=fontsize)

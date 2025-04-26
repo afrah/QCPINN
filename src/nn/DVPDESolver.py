@@ -7,11 +7,9 @@ import matplotlib.pyplot as plt
 from src.utils.logger import Logging
 from src.nn.DVQuantumLayer import DVQuantumLayer
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class DVPDESolver(nn.Module):
-    def __init__(self, args, logger: Logging, data=None, device=DEVICE):
+    def __init__(self, args, logger: Logging, data=None, device=None):
         super().__init__()
         self.logger = logger
         self.device = device
@@ -36,7 +34,6 @@ class DVPDESolver(nn.Module):
                 nn.Linear(self.classic_network[-2], self.num_qubits).to(self.device),
             ).to(self.device)
         else:
-
             self.preprocessor = nn.Sequential(
                 nn.Linear(self.classic_network[0], self.classic_network[-2]).to(
                     self.device

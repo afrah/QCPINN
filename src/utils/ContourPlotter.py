@@ -37,7 +37,7 @@ class ContourPlotter:
         Draw 2D contour plots for cavity flow results.
         Each row (u, v, p) has independent scaling for solutions and errors.
         """
-        # Handle coordinates
+
         x_grid = xf.flatten()  # Convert to 1D arrays first
         y_grid = yf.flatten()
         X, Y = np.meshgrid(x_grid, y_grid)
@@ -154,11 +154,9 @@ class ContourPlotter:
             zip(grid, data, plot_params, titles)
         ):
             ax.set_aspect("equal", adjustable="box")
-            # print(Z.shape , X.shape , Y.shape)
             # Create contour plot
             pcf = ax.contourf(X, Y, Z[time_step, :, :], **params["kwargs"])
 
-            # Create colorbar
             cb = ax.cax.colorbar(
                 pcf,
                 ticks=np.linspace(params["minmax"][0], params["minmax"][1], ticks),
@@ -169,10 +167,8 @@ class ContourPlotter:
             for spine in ax.spines.values():
                 spine.set_visible(False)
 
-            # Set title
             ax.set_title(title, fontsize=self.fontsize, pad=7)
 
-            # Add labels only for leftmost plot of bottom row
             row = idx // plots_per_row
             col = idx % plots_per_row
 
@@ -192,7 +188,6 @@ class ContourPlotter:
                 ax.set_xticks([])
                 ax.set_yticks([])
 
-        # Finalize and save figure
         self._finalize_figure(fig, filename, img_width, img_height)
 
     def _finalize_figure(

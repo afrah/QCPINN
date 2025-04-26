@@ -57,7 +57,6 @@ X_star = torch.hstack(
 
 
 
-# Exact solution
 u_analytic = u(X_star).cpu().detach().numpy()
 f_analytic = r(X_star).cpu().detach().numpy()
 

@@ -4,11 +4,9 @@ import os
 
 from src.utils.logger import Logging
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class ClassicalSolver(nn.Module):
-    def __init__(self, args, logger: Logging, data=None, device=DEVICE):
+    def __init__(self, args, logger: Logging, data=None, device=None):
         super().__init__()
         self.logger = logger
         self.device = device
@@ -41,7 +39,6 @@ class ClassicalSolver(nn.Module):
         ).to(self.device)
 
         self.activation = nn.Tanh()
-        
 
         self.optimizer = torch.optim.Adam(
             filter(lambda p: p.requires_grad, self.parameters()), lr=0.005
@@ -60,18 +57,16 @@ class ClassicalSolver(nn.Module):
         """Apply Xavier initialization to all layers."""
         for layer in self.preprocessor:
             if isinstance(layer, nn.Linear):
-                nn.init.xavier_normal_(
-                    layer.weight
-                )  
+                nn.init.xavier_normal_(layer.weight)
                 if layer.bias is not None:
-                    nn.init.zeros_(layer.bias)  
+                    nn.init.zeros_(layer.bias)
 
     def _initialize_logging(self):
         self.log_path = self.logger.get_output_dir()
         self.logger.print(f"checkpoint path: {self.log_path=}")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        
+
         try:
             if x.dim() != 2:
                 raise ValueError(f"Expected 2D input tensor, got shape {x.shape}")

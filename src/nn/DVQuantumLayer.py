@@ -34,7 +34,6 @@ class DVQuantumLayer(nn.Module):
             )
 
         elif self.q_ansatz == "alternating_layer_tdcnot":
-
             self.params = nn.Parameter(
                 torch.empty(
                     self.num_quantum_layers,
@@ -44,7 +43,6 @@ class DVQuantumLayer(nn.Module):
                 )
             )
         elif self.q_ansatz == "sim_circ_19":
-
             self.params = nn.Parameter(
                 torch.empty(
                     self.num_quantum_layers,
@@ -65,7 +63,6 @@ class DVQuantumLayer(nn.Module):
             )
 
         elif self.q_ansatz == "sim_circ_15":
-
             self.params = nn.Parameter(
                 torch.empty(
                     self.num_quantum_layers,
@@ -76,7 +73,6 @@ class DVQuantumLayer(nn.Module):
             )
 
         elif self.q_ansatz == "sim_circ_5":
-
             self.params = nn.Parameter(
                 torch.empty(
                     self.num_quantum_layers,
@@ -100,7 +96,6 @@ class DVQuantumLayer(nn.Module):
         )
 
     def _quantum_circuit(self, x):
-
         if self.encoding == "amplitude":
             qml.templates.AmplitudeEmbedding(
                 x, wires=range(self.num_qubits), normalize=True, pad_with=0.0
@@ -144,7 +139,6 @@ class DVQuantumLayer(nn.Module):
                 self.params.view(self.num_quantum_layers, self.num_qubits * 2)
             )
         elif self.q_ansatz in ["layered_circuit", "alternating_layer_tdcnot"]:
-
             torch.nn.init.xavier_normal_(
                 self.params.view(self.num_quantum_layers, self.num_qubits * 4)
             )
@@ -176,9 +170,9 @@ class DVQuantumLayer(nn.Module):
         Returns:
             None: Constructs the quantum circuit.
         """
-        assert (
-            params is not None and len(params) == self.num_qubits * 4
-        ), "The number of parameters must be equal to 4* num_qubits."
+        assert params is not None and len(params) == self.num_qubits * 4, (
+            "The number of parameters must be equal to 4* num_qubits."
+        )
 
         # track the parameter index
         param_idx = 0
@@ -215,9 +209,9 @@ class DVQuantumLayer(nn.Module):
             params (list or np.ndarray): Parameters for the circuit. Should have a size of
                                         `num_layers * num_qubits * 4` (4 parameters per thinly dressed CNOT gate).
         """
-        assert (
-            params is not None and len(params) == self.num_qubits * 4
-        ), "The number of parameters must be equal to  num_qubits * 4."
+        assert params is not None and len(params) == self.num_qubits * 4, (
+            "The number of parameters must be equal to  num_qubits * 4."
+        )
 
         param_idx = 0  # Initialize the parameter index
 
@@ -247,7 +241,6 @@ class DVQuantumLayer(nn.Module):
             build_tdcnot(ctrl, tgt)
 
     def sim_circ_19(self, params):
-
         def add_rotations():
             param_counter = 0
             for i in range(0, self.num_qubits):

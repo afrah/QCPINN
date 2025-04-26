@@ -27,7 +27,6 @@ class CVPDESolver(nn.Module):
         self.model_path = os.path.join(self.log_path, "model.pth")
         # Classical preprocessing
 
-        # CV Quantum layer
         try:
             if self.args.get("class") == "CVNeuralNetwork1":
                 from src.nn.CVNeuralNetwork1 import CVNeuralNetwork1
@@ -135,7 +134,6 @@ class CVPDESolver(nn.Module):
                     nn.init.zeros_(layer.bias)  # Set b
 
     def _initialize_logging(self):
-
         if self.num_qubits < 2:
             raise ValueError("Number of qubits must be at least 2")
         if self.num_quantum_layers < 1:

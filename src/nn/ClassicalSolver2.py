@@ -1,13 +1,11 @@
-
 import torch
 import torch.nn as nn
 import os
 from src.utils.logger import Logging
 
 
-
 class ClassicalSolver2(nn.Module):
-    def __init__(self, args, logger: Logging, data=None, device="cpu"):
+    def __init__(self, args, logger: Logging, data=None, device=None):
         super().__init__()
         self.logger = logger
         self.device = device
@@ -50,7 +48,6 @@ class ClassicalSolver2(nn.Module):
         ).to(self.device)
         self.activation = nn.Tanh()
 
-
         self.optimizer = torch.optim.Adam(
             filter(lambda p: p.requires_grad, self.parameters()), lr=self.args["lr"]
         )
@@ -67,18 +64,16 @@ class ClassicalSolver2(nn.Module):
     def _initialize_weights(self):
         for layer in self.preprocessor:
             if isinstance(layer, nn.Linear):
-                nn.init.xavier_normal_(
-                    layer.weight
-                )  
+                nn.init.xavier_normal_(layer.weight)
                 if layer.bias is not None:
-                    nn.init.zeros_(layer.bias)  
+                    nn.init.zeros_(layer.bias)
 
     def _initialize_logging(self):
         self.log_path = self.logger.get_output_dir()
         self.logger.print(f"checkpoint path: {self.log_path=}")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-      
+
         try:
             if x.dim() != 2:
                 raise ValueError(f"Expected 2D input tensor, got shape {x.shape}")

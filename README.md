@@ -4,9 +4,7 @@
 
 Source code of QCPINN described in the paper: [QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs](https://arxiv.org/abs/2503.16678).
 
-
 ---
-
 
 ## Getting Started
 
@@ -71,7 +69,7 @@ python -m src.contour_plots.wave_hybrid_plotting
 python -m src.contour_plots.diffusion_hybrid_plotting
 ```
 
-## Comparision  of the amplitude and angle encodings
+## Comparision of the amplitude and angle encodings
 
 ```bash
 # Cavity
@@ -80,7 +78,6 @@ python -m src.testing.cavity_test
 # Helmholtz
 python -m src.testing.helmholtz_test
 ```
-
 
 Output plots and data will be saved in the appropriate results directory.
 
@@ -120,7 +117,7 @@ If you find this work useful, please consider citing:
 
 ```bibtex
 @article{farea2025qcpinn,
-  title={QCPINN: Quantum Classical Physics-Informed Neural Networks for Solving PDEs},
+  title={QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs},
   author={Farea, Afrah and Khan, Saiful and Celebi, Mustafa Serdar},
   journal={arXiv preprint arXiv:2503.16678},
   year={2025}

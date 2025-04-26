@@ -1,8 +1,6 @@
-import sys
 import os
 import torch
 import numpy as np
-from matplotlib import pyplot as plt
 import h5py
 import pandas as pd
 
@@ -11,7 +9,6 @@ from src.utils.plot_loss import plot_loss_history
 from src.utils.color import model_color
 from src.nn.DVPDESolver import DVPDESolver
 from src.nn.CVPDESolver import CVPDESolver
-from src.nn.ClassicalSolver import ClassicalSolver
 from src.utils.error_metrics import lp_error
 
 
@@ -168,7 +165,6 @@ def create_plot_config(all_loss_history):
 
 
 def main():
-
     logger, model_dirname = setup_logger()
 
     time_, xfa, yfa, ufa, vfa, pfa = load_and_process_data()

@@ -35,29 +35,32 @@ dom_coords = np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32)
 
 # Create mesh grid with float32
 number_of_points = 20
-t = np.linspace(dom_coords[0, 0], dom_coords[1, 0], number_of_points, dtype=np.float32)[:, None]
-x = np.linspace(dom_coords[0, 1], dom_coords[1, 1], number_of_points, dtype=np.float32)[:, None]
+t = np.linspace(dom_coords[0, 0], dom_coords[1, 0], number_of_points, dtype=np.float32)[
+    :, None
+]
+x = np.linspace(dom_coords[0, 1], dom_coords[1, 1], number_of_points, dtype=np.float32)[
+    :, None
+]
 t, x = np.meshgrid(t, x)
 
 # Convert to PyTorch tensor with float32
-X_star = torch.hstack((
-    torch.from_numpy(t.flatten()[:, None]), 
-    torch.from_numpy(x.flatten()[:, None])
-)).to(DEVICE).to(torch.float32)
+X_star = (
+    torch.hstack(
+        (torch.from_numpy(t.flatten()[:, None]), torch.from_numpy(x.flatten()[:, None]))
+    )
+    .to(DEVICE)
+    .to(torch.float32)
+)
 
 u_star = u(X_star)
 f_star = f(X_star, alpha, beta, gamma, k)
 
-model_path_angle_cascade = (
-    "./models/2025-02-21_11-44-19-583365"  # angle_cascade
-)
+model_path_angle_cascade = "./models/2025-02-21_11-44-19-583365"  # angle_cascade
 
-model_path_classical = (
-    "./models/2025-02-25_17-01-13-323053"  # classical
-)
+model_path_classical = "./models/2025-02-25_17-01-13-323053"  # classical
 
 
-#old
+# old
 
 # model_path_classical = (
 #     "./log_files/checkpoints/klein_gordon/2025-02-21_11-30-37-031082"  # classical
@@ -70,7 +73,7 @@ MODEL_DIRS = {
 
 data = X_star
 
-results  = {}
+results = {}
 all_loss_history = {}
 
 for model_name, (solver, model_path) in MODEL_DIRS.items():
@@ -85,17 +88,19 @@ for model_name, (solver, model_path) in MODEL_DIRS.items():
 
     elif solver == "Classical":
         state = ClassicalSolver.load_state(model_path)
-            
-        if 'hidden_network' in state:
+
+        if "hidden_network" in state:
             from src.nn.ClassicalSolver2 import ClassicalSolver2
+
             state = ClassicalSolver2.load_state(model_path)
             model = ClassicalSolver2(state["args"], logger, data, DEVICE)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.hidden.load_state_dict(state["hidden_network"])
             model.postprocessor.load_state_dict(state["postprocessor"])
-        
+
         else:
             from src.nn.ClassicalSolver import ClassicalSolver
+
             model = ClassicalSolver(state["args"], logger, data, DEVICE)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.postprocessor.load_state_dict(state["postprocessor"])
@@ -117,7 +122,9 @@ for model_name, (solver, model_path) in MODEL_DIRS.items():
 
     model.model_path = logger.get_output_dir()
 
-    u_pred_star, f_pred_star = klein_gordon_operator(model, X_star[:, 0:1], X_star[:, 1:2])
+    u_pred_star, f_pred_star = klein_gordon_operator(
+        model, X_star[:, 0:1], X_star[:, 1:2]
+    )
 
     u_pred = u_pred_star.cpu().detach().numpy()
     f_pred = f_pred_star.cpu().detach().numpy()
@@ -130,13 +137,12 @@ for model_name, (solver, model_path) in MODEL_DIRS.items():
     logger.print("Relative L2 error_u: {:.2e}".format(error_u.item()))
     logger.print("Relative L2 error_f: {:.2e}".format(error_f.item()))
 
-
     # Print total number of parameters
     total_params = sum(p.numel() for p in model.parameters())
     model.logger.print(f"Total number of parameters: {total_params}")
 
     results[model_name] = (u_pred, f_pred)
-    all_loss_history[model_name] = state['loss_history']
+    all_loss_history[model_name] = state["loss_history"]
 
     del model
 
@@ -155,4 +161,3 @@ plot_loss_history(
     y_max=2000,
     legend=False,
 )
-

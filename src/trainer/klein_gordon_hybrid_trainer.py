@@ -1,12 +1,8 @@
-import pennylane as qml
-from pennylane import numpy as np
 import torch
 import torch.nn as nn
 import os
-import sys
 import matplotlib.pyplot as plt
-import pickle
-
+import numpy as np
 
 from src.utils.logger import Logging
 from src.nn.pde import klein_gordon_operator
@@ -72,7 +68,7 @@ elif args["solver"] == "Classical":
 else:
     model = DVPDESolver(args, logger, DEVICE)
     model.logger.print("Using DV Solver")
-# Training loop
+
 model.logger.print(f"The settings used:")
 for key, value in args.items():
     model.logger.print(f"{key} : {value}")
@@ -87,8 +83,6 @@ klein_gordon_train.train(model)
 model.save_state()
 
 model.logger.print("Training completed successfuly!")
-
-# Plot loss History
 
 
 plt.plot(range(len(model.loss_history)), model.loss_history)
@@ -133,9 +127,6 @@ u_star = u(X_star)
 f_star = f(X_star, alpha, beta, gamma, k)
 
 
-# Predictions
-
-
 u_pred_star, f_pred_star = klein_gordon_operator(model, X_star[:, 0:1], X_star[:, 1:2])
 
 u_pred = u_pred_star.cpu().detach().numpy()
@@ -144,14 +135,12 @@ u_star = u_star.cpu().detach().numpy()
 f_star = f_star.cpu().detach().numpy()
 X = X_star.cpu().detach().numpy()
 
-# Relative L2 error
 error_u = np.linalg.norm(u_pred - u_star) / np.linalg.norm(u_star) * 100
 error_f = np.linalg.norm(f_pred - f_star) / np.linalg.norm(f_star) * 100
 logger.print("Relative L2 error_u: {:.2e}".format(error_u))
 logger.print("Relative L2 error_f: {:.2e}".format(error_f))
 
 
-# Plot predictions
 plt_prediction(
     logger,
     X,

@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 
 A1 = 1
 A2 = 4

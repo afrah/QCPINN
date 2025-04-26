@@ -61,7 +61,6 @@ def r(txy, Diffusion=default_D, v_x=default_v_x, v_y=default_v_y):
 
 
 def generate_training_dataset(device):
-
     # Domain boundaries
     ics_coords = torch.tensor(
         [[0.0, 0.0, 0.0], [0.0, 1.0, 1.0]], dtype=torch.float32, device=device
