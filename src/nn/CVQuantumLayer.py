@@ -49,10 +49,9 @@ class CVQuantumLayer(nn.Module):
             )
         )
 
-        # create separate quantum devices for each wire
         self.dev_x = qml.device("default.gaussian", wires=self.num_qubits)
         self.dev_p = qml.device("default.gaussian", wires=self.num_qubits)
-        # create separate circuits for X and P measurements
+
         self.circuit_X = qml.QNode(
             self.quantum_circuit_X, self.dev_x, interface="torch"
         )
@@ -79,34 +78,30 @@ class CVQuantumLayer(nn.Module):
         self, inputs, displacements, squeezing, beamsplitter, wire_idx
     ):
         """Quantum circuit measuring X quadrature for a specific wire"""
-        # encode inputs
+
         for i in range(self.num_qubits):
             qml.Displacement(inputs[i], 0.0, wires=i)
 
-        # apply quantum layers
         for layer in range(self.num_layers):
-            # first apply single-mode operations
+
             for wire in range(self.num_qubits):
-                # displacement gates
+                #
                 qml.Displacement(
                     displacements[layer, wire, 0],
                     displacements[layer, wire, 1],
                     wires=wire,
                 )
-                # squeezing gates (magnitude must be positive)
+
                 qml.Squeezing(
                     torch.abs(squeezing[layer, wire, 0]),
                     squeezing[layer, wire, 1],
                     wires=wire,
                 )
 
-            # then apply two-mode operations
             for wire in range(self.num_qubits - 1):
-                # beamsplitter gates (transmittivity must be between 0 and 1)
+
                 qml.Beamsplitter(
-                    torch.sigmoid(
-                        beamsplitter[layer, wire, 0]
-                    ),  # ensures value between 0 and 1
+                    torch.sigmoid(beamsplitter[layer, wire, 0]),
                     beamsplitter[layer, wire, 1],
                     wires=[wire, wire + 1],
                 )
@@ -117,34 +112,25 @@ class CVQuantumLayer(nn.Module):
         self, inputs, displacements, squeezing, beamsplitter, wire_idx
     ):
         """Quantum circuit measuring P quadrature for a specific wire"""
-        # encode inputs
         for i in range(self.num_qubits):
             qml.Displacement(inputs[i], 0.0, wires=i)
 
-        # apply quantum layers
         for layer in range(self.num_layers):
-            # first apply single-mode operations
             for wire in range(self.num_qubits):
-                # displacement gates
                 qml.Displacement(
                     displacements[layer, wire, 0],
                     displacements[layer, wire, 1],
                     wires=wire,
                 )
-                # squeezing gates (magnitude must be positive)
                 qml.Squeezing(
                     torch.abs(squeezing[layer, wire, 0]),
                     squeezing[layer, wire, 1],
                     wires=wire,
                 )
 
-            # then apply two-mode operations
             for wire in range(self.num_qubits - 1):
-                # beamsplitter gates (transmittivity must be between 0 and 1)
                 qml.Beamsplitter(
-                    torch.sigmoid(
-                        beamsplitter[layer, wire, 0]
-                    ),  # ensures value between 0 and 1
+                    torch.sigmoid(beamsplitter[layer, wire, 0]),
                     beamsplitter[layer, wire, 1],
                     wires=[wire, wire + 1],
                 )
@@ -158,7 +144,6 @@ class CVQuantumLayer(nn.Module):
         for sample in x:
             sample = sample.float()
 
-            # measure X quadrature for each wire
             x_measurements = []
             for wire in range(self.num_qubits):
                 out_x = self.circuit_X(
@@ -170,7 +155,6 @@ class CVQuantumLayer(nn.Module):
                 )
                 x_measurements.append(out_x)
 
-            # measure P quadrature for each wire
             p_measurements = []
             for wire in range(self.num_qubits):
                 out_p = self.circuit_P(
@@ -182,11 +166,9 @@ class CVQuantumLayer(nn.Module):
                 )
                 p_measurements.append(out_p)
 
-            # combine measurements
             combined = torch.cat(
                 [torch.stack(x_measurements), torch.stack(p_measurements)]
             )
             quantum_outputs.append(combined)
 
-        # stack all batch results
         return torch.stack(quantum_outputs)

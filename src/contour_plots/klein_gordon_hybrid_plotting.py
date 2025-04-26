@@ -1,4 +1,3 @@
-## Imports
 import numpy as np
 import os
 import sys
@@ -7,32 +6,22 @@ from pennylane import numpy as pnp
 import torch
 import torch.nn as nn
 
-## Imports
-import os
-import sys
-
 from src.utils.plot_loss import plot_loss_history
+from src.utils.regular_expression import extract_loss_values_cavity
 
+from src.nn.DVPDESolver import DVPDESolver
+from src.nn.CVPDESolver import CVPDESolver
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), "./"))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-from src.poisson.dv_solver import DVPDESolver
-from src.poisson.cv_solver import CVPDESolver
-
-# from src.utils.color import model_color
-# from src.utils.plot_loss import plot_loss_history
 from src.utils.logger import Logging
 
 from src.nn.pde import klein_gordon_operator
 from src.utils.plot_model_results import plt_model_results
 from src.data.klein_gordon_dataset import u, f
-from src.poisson.classical_solver_new import Classical_Solver
+from src.nn.ClassicalSolver import ClassicalSolver
 
 log_path = "testing_checkpoints/klein_gordon"
 logger = Logging(log_path)
+
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Test data
@@ -74,9 +63,9 @@ model_path_classical = (
 #     "./log_files/checkpoints/klein_gordon/2025-02-21_11-30-37-031082"  # classical
 # )
 
-MODEL_PATHS = {
-    "classical": ("classical", model_path_classical),
-    "angle_cascade": ("dv", model_path_angle_cascade),
+MODEL_DIRS = {
+    "classical": ("Classical", model_path_classical),
+    "angle_cascade": ("DV", model_path_angle_cascade),
 }
 
 data = X_star
@@ -84,24 +73,35 @@ data = X_star
 results  = {}
 all_loss_history = {}
 
-for model_name, (solver, model_path) in MODEL_PATHS.items():
-    if solver == "dv":
-        state = DVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+for model_name, (solver, model_path) in MODEL_DIRS.items():
+    model_path = os.path.join(model_path, "model.pth")
+    if solver == "DV":
+        state = DVPDESolver.load_state(model_path)
         model = DVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.postprocessor.load_state_dict(state["postprocessor"])
         model.quantum_layer.load_state_dict(state["quantum_layer"])
         model.logger.print(f"Using DV Solver")
-    elif solver == "classical":
-        state = Classical_Solver.load_state(os.path.join(model_path , "model.pth"))
-        model = Classical_Solver(state["args"], logger)    
-        model.preprocessor.load_state_dict(state["preprocessor"])
-        model.hidden.load_state_dict(state["hidden_network"])
-        model.postprocessor.load_state_dict(state["postprocessor"])
-        model.logger.print(f"Using classical Solver")
 
-    elif solver == "cv":
-        state = CVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+    elif solver == "Classical":
+        state = ClassicalSolver.load_state(model_path)
+            
+        if 'hidden_network' in state:
+            from src.nn.ClassicalSolver2 import ClassicalSolver2
+            state = ClassicalSolver2.load_state(model_path)
+            model = ClassicalSolver2(state["args"], logger, data, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.hidden.load_state_dict(state["hidden_network"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
+        
+        else:
+            from src.nn.ClassicalSolver import ClassicalSolver
+            model = ClassicalSolver(state["args"], logger, data, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
+
+    elif solver == "CV":
+        state = CVPDESolver.load_state(model_path)
         model = CVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.postprocessor.load_state_dict(state["postprocessor"])
@@ -117,7 +117,6 @@ for model_name, (solver, model_path) in MODEL_PATHS.items():
 
     model.model_path = logger.get_output_dir()
 
-    # Predictions
     u_pred_star, f_pred_star = klein_gordon_operator(model, X_star[:, 0:1], X_star[:, 1:2])
 
     u_pred = u_pred_star.cpu().detach().numpy()
@@ -126,7 +125,6 @@ for model_name, (solver, model_path) in MODEL_PATHS.items():
     f_exact = f_star.cpu().detach().numpy()
     X = X_star.cpu().detach().numpy()
 
-        # Relative L2 error
     error_u = np.linalg.norm(u_pred - u_exact, 2) / np.linalg.norm(u_exact, 2) * 100
     error_f = np.linalg.norm(f_pred - f_exact, 2) / np.linalg.norm(f_exact, 2) * 100
     logger.print("Relative L2 error_u: {:.2e}".format(error_u.item()))
@@ -142,7 +140,6 @@ for model_name, (solver, model_path) in MODEL_PATHS.items():
 
     del model
 
-# Plot predictions
 plt_model_results(
     logger,
     X,
@@ -152,8 +149,6 @@ plt_model_results(
 )
 
 
-# Plot loss history
-# Generate and save plot
 plot_loss_history(
     all_loss_history,
     os.path.join(logger.get_output_dir(), "loss_history_klein_gordon.png"),

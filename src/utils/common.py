@@ -9,13 +9,11 @@ def sum_vector_cost_func(vector):
 def solve_poisson_equation(size):
     import scipy.sparse.linalg as spla
 
-    # Get the system setup
+    # get the system setup
     x_axis, y_axis, L_sys, b = identity_matrix_system(size)
-
-    # Solve the linear system L_sys * u = b
+    # solve the linear system L_sys * u = b
     u = spla.spsolve(L_sys, b)
 
-    # Return x, y, and u
     return x_axis, y_axis, u
 
 

@@ -28,58 +28,54 @@ class CVPDESolver(nn.Module):
         # Classical preprocessing
 
         # CV Quantum layer
-        if self.args.get("class", "CVNeuralNetwork") == "enhanced_CVNeuralNetwork":
-            from src.poisson.ECVQNN import CVNeuralNetwork
+        try:
+            if self.args.get("class") == "CVNeuralNetwork1":
+                from src.nn.CVNeuralNetwork1 import CVNeuralNetwork1
 
-            self.logger.print("Using enhanced CVNeuralNetwork")
+                self.logger.print("Using CVNeuralNetwork1")
 
-        # CV Quantum layer
-        elif self.args.get("class", "CVNeuralNetwork") == "light_CVNeuralNetwork":
-            from src.poisson.SMCVQNN import CVNeuralNetwork
+                self.quantum_layer = CVNeuralNetwork1(
+                    self.num_qubits,
+                    self.num_quantum_layers,
+                    self.device,
+                    cutoff_dim=args["cutoff_dim"],
+                )
+            elif self.args.get("class") == "CVNeuralNetwork2":
+                from src.nn.CVNeuralNetwork2 import CVNeuralNetwork2
 
-            self.logger.print("Using light_CVNeuralNetwork ")
+                self.logger.print("Using CVNeuralNetwork2 ")
 
-        elif self.args.get("class", "CVNeuralNetwork") == "random_CVNeuralNetwork":
-            from src.poisson.RandomCVQNN import CVNeuralNetwork
+                self.quantum_layer = CVNeuralNetwork2(
+                    self.num_qubits,
+                    self.num_quantum_layers,
+                    self.device,
+                    cutoff_dim=args["cutoff_dim"],
+                )
+            elif self.args.get("class") == "GSRandomCVQNN2":
+                from src.nn.CVNeuralNetwork3 import CVNeuralNetwork3
 
-            self.logger.print("Using random_CVNeuralNetwork ")
+                self.logger.print("Using CVNeuralNetwork3 ")
 
-        elif self.args.get("class", "CVNeuralNetwork") == "GSRandomCVQNN":
-            from src.poisson.GSRandomCVQNN import CVNeuralNetwork
+                self.quantum_layer = CVNeuralNetwork3(
+                    self.num_qubits,
+                    self.num_quantum_layers,
+                    self.device,
+                    cutoff_dim=args["cutoff_dim"],
+                )
+            else:
+                from src.nn.CVNeuralNetwork1 import CVNeuralNetwork1
 
-            self.logger.print("Using GSRandomCVQNN ")
+                self.logger.print("Using CVNeuralNetwork1")
 
-        elif self.args.get("class", "CVNeuralNetwork") == "GSRandomCVQNN2":
-            from src.poisson.GSRandomCVQNN2 import CVNeuralNetwork
-
-            self.logger.print("Using GSRandomCVQNN2 ")
-
-        elif self.args.get("class", "CVNeuralNetwork") == "ChebyshevSMCVQNN":
-            from src.poisson.ChebyshevSMCVQNN import CVNeuralNetwork
-
-            self.logger.print("Using ChebyshevSMCVQNN ")
-
-        elif self.args.get("class", "CVNeuralNetwork") == "CVNeuralNetwork_cavity":
-            from src.poisson.CVNeuralNetwork_cavity import CVNeuralNetwork
-
-            self.logger.print("Using CVNeuralNetwork_cavity ")
-
-        elif self.args.get("class", "CVNeuralNetwork") == "CVNeuralNetwork2":
-            from src.poisson.CVNeuralNetwork2 import CVNeuralNetwork
-
-            self.logger.print("Using CVNeuralNetwork2")
-
-        else:
-            from src.poisson.CVNeuralNetwork import CVNeuralNetwork
-
-            self.logger.print("Using CVNeuralNetwork")
-
-        self.quantum_layer = CVNeuralNetwork(
-            self.num_qubits,
-            self.num_quantum_layers,
-            self.device,
-            cutoff_dim=args["cutoff_dim"],
-        )
+                self.quantum_layer = CVNeuralNetwork1(
+                    self.num_qubits,
+                    self.num_quantum_layers,
+                    self.device,
+                    cutoff_dim=args["cutoff_dim"],
+                )
+        except Exception as e:
+            self.logger.print(f"Failed to initialize quantum layer: {str(e)}")
+            raise
 
         self.preprocessor = nn.Sequential(
             nn.Linear(self.input_dim, self.hidden_dim).to(self.device),
@@ -137,32 +133,6 @@ class CVPDESolver(nn.Module):
                 )  # Or use xavier_normal_ for normal distribution
                 if layer.bias is not None:
                     nn.init.zeros_(layer.bias)  # Set b
-        # else:
-        #     # Preprocessor
-        #     for layer in self.preprocessor:
-        #         if isinstance(layer, nn.Linear):
-        #             if layer == self.preprocessor[-2]:  # Last layer before quantum
-        #                 # Moderate scaling for quantum interface - not too small
-        #                 std = np.sqrt(2.0 / (layer.in_features + layer.out_features)) * 0.1
-        #             else:
-        #                 # Standard Glorot/Xavier for Tanh
-        #                 std = np.sqrt(2.0 / (layer.in_features + layer.out_features))
-        #             nn.init.normal_(layer.weight, mean=0.0, std=std)
-        #             if layer.bias is not None:
-        #                 nn.init.zeros_(layer.bias)
-
-        #     # Postprocessor
-        #     for layer in self.postprocessor:
-        #         if isinstance(layer, nn.Linear):
-        #             if layer == self.postprocessor[0]:  # First layer after quantum
-        #                 # Moderate scaling - balance between stability and gradient flow
-        #                 std = np.sqrt(2.0 / (layer.in_features + layer.out_features)) * 0.1
-        #             else:
-        #                 # Standard Glorot/Xavier for Tanh
-        #                 std = np.sqrt(2.0 / (layer.in_features + layer.out_features))
-        #             nn.init.normal_(layer.weight, mean=0.0, std=std)
-        #             if layer.bias is not None:
-        #                 nn.init.zeros_(layer.bias)
 
     def _initialize_logging(self):
 

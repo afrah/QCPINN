@@ -40,11 +40,8 @@ class ClassicalSolver(nn.Module):
             ),
         ).to(self.device)
 
-        # Classical layers (enforcing double precision)
         self.activation = nn.Tanh()
-
-        # Quantum parameters
-        self.num_qubits = args["num_qubits"]
+        
 
         self.optimizer = torch.optim.Adam(
             filter(lambda p: p.requires_grad, self.parameters()), lr=0.005
@@ -65,24 +62,16 @@ class ClassicalSolver(nn.Module):
             if isinstance(layer, nn.Linear):
                 nn.init.xavier_normal_(
                     layer.weight
-                )  # Or use xavier_normal_ for normal distribution
+                )  
                 if layer.bias is not None:
-                    nn.init.zeros_(layer.bias)  # Set biases to zero
+                    nn.init.zeros_(layer.bias)  
 
     def _initialize_logging(self):
         self.log_path = self.logger.get_output_dir()
         self.logger.print(f"checkpoint path: {self.log_path=}")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Forward pass through the hybrid network
-        Args:
-            x: Spatial coordinates
-            t: Time coordinates
-        Returns:
-            PDE solution values
-        """
-
+        
         try:
             if x.dim() != 2:
                 raise ValueError(f"Expected 2D input tensor, got shape {x.shape}")
@@ -122,7 +111,6 @@ class ClassicalSolver(nn.Module):
 
         self.logger.print(f"Model state saved to {model_path}")
 
-    # Load model state from a file
     @classmethod
     def load_state(cls, file_path, map_location=None):
         if map_location is None:

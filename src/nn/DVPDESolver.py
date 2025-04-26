@@ -5,7 +5,7 @@ import os
 import matplotlib.pyplot as plt
 
 from src.utils.logger import Logging
-from src.poisson.dv_quantum_layer import DVQuantumLayer
+from src.nn.DVQuantumLayer import DVQuantumLayer
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -169,7 +169,7 @@ class DVPDESolver(nn.Module):
                 if self.quantum_layer.params is not None:
                     fig, ax = qml.draw_mpl(self.quantum_layer.circuit)(x[0])
                     plt.savefig(os.path.join(self.log_path, "circuit.pdf"))
-                    plt.close()  # Clean up matplotlib resources
+                    plt.close()
                     print(f"The circuit is saved in {self.log_path}")
             except Exception as e:
                 self.logger.print(f"Failed to draw quantum circuit: {str(e)}")

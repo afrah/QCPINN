@@ -99,7 +99,6 @@ class CVNeuralNetwork3(nn.Module):
         return results
 
     def _quantum_circuit(self, inputs):
-        # Learnable input encoding
         if hasattr(self, "input_scaling"):
             for i, input_val in enumerate(inputs):
                 qml.Displacement(
@@ -113,7 +112,6 @@ class CVNeuralNetwork3(nn.Module):
         for layer_idx in range(self.num_layers):
             self.qnn_layer(layer_idx)
 
-        # Enhanced measurement scheme
         measurements = []
         for wire in range(self.num_qumodes):
             measurements.append(qml.expval(qml.NumberOperator(wire)))

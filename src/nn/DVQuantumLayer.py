@@ -129,7 +129,7 @@ class DVQuantumLayer(nn.Module):
         elif self.q_ansatz == "sim_circ_5":
             for layer in range(self.num_quantum_layers):
                 self.create_circuit_5(self.params[layer])
-        # Return expectation values
+
         return [qml.expval(qml.PauliZ(i)) for i in range(self.num_qubits)]
 
     def _initialize_weights(self):
@@ -193,14 +193,11 @@ class DVQuantumLayer(nn.Module):
             qml.RX(params[param_idx], wires=qubit_id)
             param_idx += 1
 
-        # barrier after entanglement
         qml.Barrier(wires=range(self.num_qubits))
 
-        # add entanglement with CNOT gates
         for qubit_id in range(self.num_qubits):
             qml.CNOT(wires=[qubit_id, (qubit_id + 1) % self.num_qubits])
 
-        # barrier after entanglement
         qml.Barrier(wires=range(self.num_qubits))
 
         for qubit_id in range(self.num_qubits):
@@ -249,7 +246,6 @@ class DVQuantumLayer(nn.Module):
             ctrl, tgt = i, ((i + 1) % self.num_qubits)
             build_tdcnot(ctrl, tgt)
 
-
     def sim_circ_19(self, params):
 
         def add_rotations():
@@ -263,7 +259,7 @@ class DVQuantumLayer(nn.Module):
                 param_counter += 1
 
             # barrier after entanglement
-            qml.Barrier(wires=range(self.num_qubits))  
+            qml.Barrier(wires=range(self.num_qubits))
 
         def add_entangling_gates():
             param_counter = 0
@@ -276,7 +272,6 @@ class DVQuantumLayer(nn.Module):
         # add layers of the ansatz
         add_rotations()
         add_entangling_gates()
-
 
     def farhi_ansatz(self, params):
         param_counter = 0
@@ -346,16 +341,16 @@ class DVQuantumLayer(nn.Module):
         # main circuit construction
         apply_rotations()
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
         apply_entangling_block1()
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
         apply_rotations()
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
         apply_entangling_block2()
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
 
     def create_circuit_5(self, params):
         """
@@ -384,7 +379,7 @@ class DVQuantumLayer(nn.Module):
             param_idx += 1
 
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
         # additional Rz gates for all except last qubit
         for i in range(self.num_qubits - 1, -1, -1):
             for j in range(self.num_qubits - 1, -1, -1):
@@ -393,7 +388,7 @@ class DVQuantumLayer(nn.Module):
                     param_idx += 1
 
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
 
         # middle layer (using RX instead of CNOTs as in original)
         for i in range(self.num_qubits):
@@ -405,7 +400,7 @@ class DVQuantumLayer(nn.Module):
             param_idx += 1
 
         # barrier after entanglement
-        qml.Barrier(wires=range(self.num_qubits))  
+        qml.Barrier(wires=range(self.num_qubits))
 
     def quantum_tanh_n_qubits(self, params, scale=1.0):
         """

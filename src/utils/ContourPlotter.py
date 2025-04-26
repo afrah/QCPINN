@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from typing import List, Tuple
- 
+
 from src.utils.cmap import orange_cmap2
 
 
-SOLUTION_MAP  = "rainbow"
+SOLUTION_MAP = "rainbow"
 ERROR_MAP = orange_cmap2
 
 
@@ -105,8 +105,8 @@ class ContourPlotter:
                 d_slice = d[time_step] if d.ndim == 3 else d
                 if d_slice.ndim == 1:
                     d_slice = d_slice.reshape(X.shape)
-                
-                if 'error' in title.lower():
+
+                if "error" in title.lower():
                     row_errors.append(d_slice)
                     # print("inside if error title: ", title)
                 else:
@@ -116,14 +116,14 @@ class ContourPlotter:
             # Calculate min/max for solutions and errors in this row
             solution_min = min(np.min(d) for d in row_solutions)
             solution_max = max(np.max(d) for d in row_solutions)
-            
+
             if row_errors:
-                error_min = 0.0 #smin(np.min(d) for d in row_errors)
+                error_min = 0.0  # smin(np.min(d) for d in row_errors)
                 error_max = max(np.max(d) for d in row_errors)
 
             # Create parameters for each plot in current row
             for i, (d, title) in enumerate(zip(row_data, row_titles)):
-                if 'error' in title.lower():
+                if "error" in title.lower():
                     cmap = ERROR_MAP
                     vmin, vmax = error_min, error_max
                     # print("error title", title)
@@ -137,49 +137,57 @@ class ContourPlotter:
                     vmin += -1e-16
                     vmax += 1e-6
 
-                plot_params.append({
-                    'minmax': [vmin, vmax],
-                    'kwargs': {
-                        'levels': np.linspace(vmin, vmax, 50),
-                        'cmap': cmap,
-                        'vmin': vmin,
-                        'vmax': vmax,
+                plot_params.append(
+                    {
+                        "minmax": [vmin, vmax],
+                        "kwargs": {
+                            "levels": np.linspace(vmin, vmax, 50),
+                            "cmap": cmap,
+                            "vmin": vmin,
+                            "vmax": vmax,
+                        },
                     }
-                })
+                )
 
         # Create individual plots
-        for idx, (ax, Z, params, title) in enumerate(zip(grid, data, plot_params, titles)):
-            ax.set_aspect('equal', adjustable='box')
+        for idx, (ax, Z, params, title) in enumerate(
+            zip(grid, data, plot_params, titles)
+        ):
+            ax.set_aspect("equal", adjustable="box")
             # print(Z.shape , X.shape , Y.shape)
             # Create contour plot
-            pcf = ax.contourf(X, Y, Z[time_step,:,:], **params['kwargs'])
-            
+            pcf = ax.contourf(X, Y, Z[time_step, :, :], **params["kwargs"])
+
             # Create colorbar
             cb = ax.cax.colorbar(
                 pcf,
-                ticks=np.linspace(params['minmax'][0], params['minmax'][1], ticks),
-                format='%.1e'
+                ticks=np.linspace(params["minmax"][0], params["minmax"][1], ticks),
+                format="%.1e",
             )
             cb.ax.tick_params(labelsize=self.labelsize)
-            
+
             for spine in ax.spines.values():
                 spine.set_visible(False)
-            
+
             # Set title
             ax.set_title(title, fontsize=self.fontsize, pad=7)
 
             # Add labels only for leftmost plot of bottom row
             row = idx // plots_per_row
             col = idx % plots_per_row
-            
+
             if row == n_rows - 1 and col == 0:
                 ax.set_xticks(np.linspace(X.min(), X.max(), 3))
                 ax.set_yticks(np.linspace(Y.min(), Y.max(), 4))
-                ax.set_xticklabels([f'{x:.1f}' for x in np.linspace(X.min(), X.max(), 3)])
-                ax.set_yticklabels([f'{y:.1f}' for y in np.linspace(Y.min(), Y.max(), 4)])
+                ax.set_xticklabels(
+                    [f"{x:.1f}" for x in np.linspace(X.min(), X.max(), 3)]
+                )
+                ax.set_yticklabels(
+                    [f"{y:.1f}" for y in np.linspace(Y.min(), Y.max(), 4)]
+                )
                 ax.set_xlabel(r"$x_1$→", fontsize=self.fontsize)
                 ax.set_ylabel(r"$x_2$→", fontsize=self.fontsize)
-                ax.tick_params(axis='both', which='major', labelsize=self.labelsize)
+                ax.tick_params(axis="both", which="major", labelsize=self.labelsize)
             else:
                 ax.set_xticks([])
                 ax.set_yticks([])
@@ -203,11 +211,8 @@ class ContourPlotter:
             wspace=0.5,
         )
         plt.tight_layout()
-        plt.savefig(path, 
-                    dpi=300,
-                    bbox_inches='tight',
-                    facecolor='white',
-                    edgecolor='none'
+        plt.savefig(
+            path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none"
         )
         plt.show()
-        plt.close('all')
+        plt.close("all")

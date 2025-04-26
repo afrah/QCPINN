@@ -1,21 +1,21 @@
-
 import numpy as np
 
 PLOT_STYLES = {
-    "amp_layered": "-",      # Solid line
-    "angle_layered": "-",    # Solid line
-    "amp_cascade": "-",    # Solid line
-    "amp_alternate": "-",    # Solid line
-    "amp_cross_mesh": "-",     # Solid line
-    "angle_cross_mesh": "-",   # Solid line
-    "angle_alternate": "-",  # Solid line
-    "angle_cascade": "-",  # Solid line
-    "cv": "-",              # Solid line
-    "gcv": "-",             # Solid line
-    "classical": "-"        # Solid line
+    "amp_layered": "-", 
+    "angle_layered": "-",
+    "amp_cascade": "-",
+    "amp_alternate": "-",
+    "amp_cross_mesh": "-",
+    "angle_cross_mesh": "-",
+    "angle_alternate": "-",
+    "angle_cascade": "-",
+    "cv": "-",
+    "gcv": "-",
+    "classical": "-",
 }
 
-def feature_scaling(prediction, exact , target_min , target_max):
+
+def feature_scaling(prediction, exact, target_min, target_max):
     """
     Scale the prediction to match the range of exact values.
     Handles cases where the prediction range is degenerate (min == max).
@@ -30,13 +30,14 @@ def feature_scaling(prediction, exact , target_min , target_max):
     min_exp = prediction.min()
     max_exp = prediction.max()
 
-    # Perform normal feature scaling
+    # perform normal feature scaling
     shifted_values = [
         (exp - min_exp) / (max_exp - min_exp) * (target_max - target_min) + target_min
         for exp in prediction
     ]
 
     return np.array(shifted_values)
+
 
 def z_score_normalize(values):
     """
@@ -48,14 +49,14 @@ def z_score_normalize(values):
     Returns:
         array-like: Z-Score normalized values.
     """
-    # Convert input to numpy array for convenience
+    # convert input to numpy array for convenience
     values = np.array(values)
-    
-    # Calculate the mean and standard deviation
+
+    # calculate the mean and standard deviation
     mean = np.mean(values)
     std_dev = np.std(values)
-    
-    # Apply Z-Score normalization
+
+    # apply z-score normalization
     z_scores = (values - mean) / std_dev
-    
+
     return z_scores

@@ -1,32 +1,17 @@
-## Imports
-import numpy as np
-import os
-import sys
 import torch
-
-## Imports
 import os
-import sys
+import numpy as np
+import matplotlib.pyplot as plt
 
-from src.utils.plot_loss import plot_loss_history
-
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), "./"))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-from src.poisson.dv_solver import DVPDESolver
-from src.poisson.cv_solver import CVPDESolver
-
-# from src.utils.color import model_color
-# from src.utils.plot_loss import plot_loss_history
+from src.nn.DVPDESolver import DVPDESolver
+from src.nn.CVPDESolver import CVPDESolver
 from src.utils.logger import Logging
-
 from src.nn.pde import diffusion_operator
 from src.data.diffusion_dataset import u, r
-from src.poisson.classical_solver_new import Classical_Solver
-from src.utils.cavity_plot_contour import ContourPlotter
+from src.nn.ClassicalSolver import ClassicalSolver
+from src.utils.ContourPlotter import ContourPlotter
+from src.utils.plot_loss import plot_loss_history
+
 
 log_path = "testing_checkpoints/diffusion"
 logger = Logging(log_path)
@@ -37,25 +22,25 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 NUM_OF_POINTS = 10
 
 dom_coords = torch.tensor(
-    [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]], dtype=torch.float32, device="cpu"
+    [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]], dtype=torch.float32, device=DEVICE
 )
 
 time_ = (
     torch.linspace(dom_coords[0, 0], dom_coords[1, 0], NUM_OF_POINTS)
-    .to("cpu")
+    .to(DEVICE)
     .unsqueeze(1)
     .to(torch.float32)
 )
 xfa = (
     torch.linspace(dom_coords[0, 1], dom_coords[1, 1], NUM_OF_POINTS)
-    .to("cpu")
+    .to(DEVICE)
     .unsqueeze(1)
     .to(torch.float32)
 )
 
 yfa = (
     torch.linspace(dom_coords[0, 2], dom_coords[1, 2], NUM_OF_POINTS)
-    .to("cpu")
+    .to(DEVICE)
     .unsqueeze(1)
     .to(torch.float32)
 )
@@ -67,7 +52,7 @@ X_star = torch.hstack(
         xfa.flatten().unsqueeze(1),
         yfa.flatten().unsqueeze(1),
     )
-).to("cpu")
+).to(DEVICE)
 
 
 
@@ -93,7 +78,7 @@ model_path_classical = (
 # )
 
 
-MODEL_PATHS = {
+MODEL_DIRS = {
     "classical": ("classical", model_path_classical),
     "angle_cascade": ("dv", model_path_angle_cascade),
 }
@@ -103,24 +88,36 @@ data = X_star
 results  = {}
 all_loss_history = {}
 
-for model_name, (solver, model_path) in MODEL_PATHS.items():
+for model_name, (solver, model_dir) in MODEL_DIRS.items():
+    model_path = os.path.join(model_dir, "model.pth")
     if solver == "dv":
-        state = DVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+        state = DVPDESolver.load_state(model_path)
         model = DVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.postprocessor.load_state_dict(state["postprocessor"])
         model.quantum_layer.load_state_dict(state["quantum_layer"])
         model.logger.print(f"Using DV Solver")
+        
     elif solver == "classical":
-        state = Classical_Solver.load_state(os.path.join(model_path , "model.pth"))
-        model = Classical_Solver(state["args"], logger)    
-        model.preprocessor.load_state_dict(state["preprocessor"])
-        model.hidden.load_state_dict(state["hidden_network"])
-        model.postprocessor.load_state_dict(state["postprocessor"])
-        model.logger.print(f"Using classical Solver")
-
+        state = ClassicalSolver.load_state(model_path)
+        
+        if 'hidden_network' in state:
+            from src.nn.ClassicalSolver2 import ClassicalSolver2
+            state = ClassicalSolver2.load_state(model_path)
+            model = ClassicalSolver2(state["args"], logger, data, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.hidden.load_state_dict(state["hidden_network"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
+            
+        else:
+            from src.nn.ClassicalSolver import ClassicalSolver
+            state = ClassicalSolver.load_state(model_path)
+            model = ClassicalSolver(state["args"], logger, data, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
+    
     elif solver == "cv":
-        state = CVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+        state = CVPDESolver.load_state(model_path)
         model = CVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.postprocessor.load_state_dict(state["postprocessor"])

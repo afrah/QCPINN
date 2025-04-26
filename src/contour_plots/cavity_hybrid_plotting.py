@@ -5,25 +5,15 @@ import h5py
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import Dict, List, Tuple, Union
-
 import sys
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), "./"))
 
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-
-# from src.utils.color import model_color
-# from src.utils.plot_loss import plot_loss_history
 from src.utils.logger import Logging
-from src.utils.cavity_plot_contour import ContourPlotter
-from src.poisson.cv_solver import CVPDESolver
-from src.poisson.dv_solver import DVPDESolver
+from src.utils.ContourPlotter import ContourPlotter
+from src.nn.CVPDESolver import CVPDESolver
+from src.nn.DVPDESolver import DVPDESolver
 from src.utils.error_metrics import lp_error
-from src.poisson.classical_solver_new import Classical_Solver
-
-
+from src.nn.ClassicalSolver import ClassicalSolver
 
 class CavityFlowAnalyzer:
     def __init__(self, logger, device: torch.device):
@@ -46,27 +36,35 @@ class CavityFlowAnalyzer:
         
         self.new_shape = domain[:, 0:1].reshape(tstep, xstep, ystep)[:, ::skip, ::skip].shape
         
-    def load_model(self, model_name: str, solver_type: str, model_path: str) -> None:
+    def load_model(self, model_name: str, solver_type: str, model_dir: str) -> None:
         """Load model based on solver type."""
-        
+        model_path = os.path.join(model_dir, "model.pth")
         if solver_type == "CV":
-            state = CVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+            state = CVPDESolver.load_state(model_path)
 
             model = CVPDESolver(state["args"], self.logger, None, self.device)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.quantum_layer.load_state_dict(state["quantum_layer"])
             model.postprocessor.load_state_dict(state["postprocessor"])
             model.logger.print("CV Model loaded successfully")
-        elif solver_type == "classical":
-            state = Classical_Solver.load_state(os.path.join(model_path, "model.pth"))
-            model = Classical_Solver(state["args"], self.logger)
-            model.preprocessor.load_state_dict(state["preprocessor"])
-            model.hidden.load_state_dict(state["hidden_network"])
-            model.postprocessor.load_state_dict(state["postprocessor"])
-            model.logger.print("classical Model loaded successfully")
-
+            
+        elif solver_type == "Classical":
+            from src.nn.ClassicalSolver import ClassicalSolver
+            state = ClassicalSolver.load_state(model_path)
+            if 'hidden_network' in state:
+                from src.nn.ClassicalSolver2 import ClassicalSolver2
+                state = ClassicalSolver2.load_state(model_path)
+                model = ClassicalSolver2(state["args"], self.logger, None, self.device)
+                model.preprocessor.load_state_dict(state["preprocessor"])
+                model.hidden.load_state_dict(state["hidden_network"])
+                model.postprocessor.load_state_dict(state["postprocessor"])
+            else:
+                model = ClassicalSolver(state["args"], self.logger, None, self.device)
+                model.preprocessor.load_state_dict(state["preprocessor"])
+                model.postprocessor.load_state_dict(state["postprocessor"])
+    
         else:  # dv solver
-            state = DVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+            state = DVPDESolver.load_state(model_path)
             model = DVPDESolver(state["args"], self.logger, None, self.device)
             model.preprocessor.load_state_dict(state["preprocessor"])
             model.postprocessor.load_state_dict(state["postprocessor"])
@@ -137,10 +135,10 @@ def main():
     
     model_paths = {
     #     "angle_cascade": ("dv", "./log_files/checkpoints/cavity/2025-02-22_14-29-03-610093"),
-        "classical": ("classical", "./models/2025-02-25_17-21-36-221407"),
+        "classical": ("Classical", "./models/2025-02-25_17-21-36-221407"),
 
     # old:
-        "angle_cascade": ("dv", "./models/2025-02-06_19-28-34-814985"),
+        "angle_cascade": ("DV", "./models/2025-02-06_19-28-34-814985"),
         # "classical": ("classical", "./log_files/checkpoints/cavity/2025-02-09_22-46-51-012656")
     }
 

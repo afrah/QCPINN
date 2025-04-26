@@ -1,27 +1,16 @@
 
 import numpy as np
-import os
-import sys
 import torch
+import os
 
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), "./"))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-from src.poisson.dv_solver import DVPDESolver
-from src.poisson.cv_solver import CVPDESolver
-
-# from src.utils.color import model_color
-# from src.utils.plot_loss import plot_loss_history
+from src.nn.DVPDESolver import DVPDESolver
+from src.nn.CVPDESolver import CVPDESolver
 from src.utils.logger import Logging
 
 from src.nn.pde import helmholtz_operator
 from src.utils.plot_model_results import plt_model_results
 from src.data.helmholtz_dataset import u, f
-# from src.poisson.classical_solver import Classical_Solver
-from src.poisson.classical_solver import Classical_Solver
+from src.nn.ClassicalSolver import ClassicalSolver
 
 log_path = "testing_checkpoints/helmholtz"
 logger = Logging(log_path)
@@ -68,32 +57,41 @@ model_path_classical = (
     "./models/2025-02-09_00-01-28-238904"  # classical
 )
 
-MODEL_PATHS = {
-    "classical": ("classical", model_path_classical),
-    "angle_cascade": ("dv", model_path_angle_cascade),
+MODEL_DIRS = {
+    "classical": ("Classical", model_path_classical),
+    "angle_cascade": ("DV", model_path_angle_cascade),
 }
 
 data = X_star
 
 results  = {}
-for model_name, (solver, model_path) in MODEL_PATHS.items():
-    if solver == "dv":
-        state = DVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+for model_name, (solver, model_dir) in MODEL_DIRS.items():
+    model_path = os.path.join(model_dir, "model.pth")
+    if solver == "DV":
+        state = DVPDESolver.load_state(model_path)
         model = DVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.quantum_layer.load_state_dict(state["quantum_layer"])
         model.postprocessor.load_state_dict(state["postprocessor"])
         model.logger.print(f"Using DV Solver")
-    elif solver == "classical":
-        state = Classical_Solver.load_state(os.path.join(model_path , "model.pth"))
-        model = Classical_Solver(state["args"], logger)    
-        model.preprocessor.load_state_dict(state["preprocessor"])
-        # model.hidden.load_state_dict(state["hidden_network"])
-        model.postprocessor.load_state_dict(state["postprocessor"])
-        model.logger.print(f"Using classical Solver")
+    
+    elif solver == "Classical":
+        from src.nn.ClassicalSolver import ClassicalSolver
+        state = ClassicalSolver.load_state(model_path)
+        if 'hidden_network' in state:
+            from src.nn.ClassicalSolver2 import ClassicalSolver2
+            state = ClassicalSolver2.load_state(model_path)
+            model = ClassicalSolver2(state["args"], logger, None, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.hidden.load_state_dict(state["hidden_network"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
+        else:
+            model = ClassicalSolver(state["args"], logger, None, DEVICE)
+            model.preprocessor.load_state_dict(state["preprocessor"])
+            model.postprocessor.load_state_dict(state["postprocessor"])
 
-    elif solver == "cv":
-        state = CVPDESolver.load_state(os.path.join(model_path, "model.pth"))
+    elif solver == "CV":
+        state = CVPDESolver.load_state(model_path)
         model = CVPDESolver(state["args"], logger, data, DEVICE)
         model.preprocessor.load_state_dict(state["preprocessor"])
         model.quantum_layer.load_state_dict(state["quantum_layer"])

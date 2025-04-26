@@ -10,13 +10,15 @@ from scipy.interpolate import griddata
 
 def plt_prediction(logger, X_star, u_star, u_pred, f_star, f_pred):
     # Set global font sizes
-    plt.rcParams.update({
-        'font.size': 14,
-        'axes.titlesize': 16,
-        'axes.labelsize': 14,
-        'xtick.labelsize': 12,
-        'ytick.labelsize': 12
-    })
+    plt.rcParams.update(
+        {
+            "font.size": 14,
+            "axes.titlesize": 16,
+            "axes.labelsize": 14,
+            "xtick.labelsize": 12,
+            "ytick.labelsize": 12,
+        }
+    )
 
     # Data dictionary for u(x) and f(x) to be used in loops
     data = {
@@ -47,26 +49,32 @@ def plt_prediction(logger, X_star, u_star, u_pred, f_star, f_pred):
         for col, field in enumerate(content):
             # Reshape the data to match the grid
             Z = value[field].reshape(len(y_unique), len(x_unique))
-            
+
             # Create contour plot
             contour = axs[row, col].contourf(
-                X, Y, Z,
+                X,
+                Y,
+                Z,
                 levels=20,  # Number of contour levels
                 cmap="coolwarm",
             )
-            
+
             # Only show y-axis labels and ticks for leftmost column
-            if (col == 0) and (row ==( len(data.items())-1)):  # If not leftmost column
+            if (col == 0) and (
+                row == (len(data.items()) - 1)
+            ):  # If not leftmost column
                 axs[row, col].set_ylabel(r"$x_2$ →", fontsize=14)
                 axs[row, col].set_xlabel(r"$x_1$ →", fontsize=14)
             else:
                 axs[row, col].set_yticklabels([])
                 axs[row, col].set_xticklabels([])
-                axs[row, col].set_ylabel('')
-                axs[row, col].set_xlabel('')
+                axs[row, col].set_ylabel("")
+                axs[row, col].set_xlabel("")
 
-            axs[row, col].set_title(f"{field.capitalize()} {value['title']}", fontsize=16)
-            
+            axs[row, col].set_title(
+                f"{field.capitalize()} {value['title']}", fontsize=16
+            )
+
             # Add colorbar with larger font size
             cbar = fig.colorbar(contour, ax=axs[row, col])
             cbar.ax.tick_params(labelsize=12)
@@ -74,7 +82,7 @@ def plt_prediction(logger, X_star, u_star, u_pred, f_star, f_pred):
     # Adjust layout and save the figure
     plt.tight_layout()
     path = os.path.join(logger.get_output_dir(), "prediction.png")
-    plt.savefig(path, dpi=300, bbox_inches='tight')
+    plt.savefig(path, dpi=300, bbox_inches="tight")
     plt.show()
     plt.close()
 

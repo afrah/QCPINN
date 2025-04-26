@@ -31,19 +31,19 @@ Train models for different PDEs using the following commands:
 
 ```bash
 # Cavity
-python -m src.poisson.cavity_hybrid_trainer
+python -m src.trainer.cavity_hybrid_trainer
 
 # Helmholtz
-python -m src.poisson.helmholtz_hybrid_trainer
+python -m src.trainer.helmholtz_hybrid_trainer
 
 # Klein-Gordon
-python -m src.poisson.klein_gordon_hybrid_trainer
+python -m src.trainer.klein_gordon_hybrid_trainer
 
 # Wave
-python -m src.poisson.wave_hybrid_trainer
+python -m src.trainer.wave_hybrid_trainer
 
 # Diffusion
-python -m src.poisson.diffusion_hybrid_trainer
+python -m src.trainer.diffusion_hybrid_trainer
 ```
 
 Jupyter notebooks for training, testing, and visualization are in `src/notebooks/`.
@@ -70,6 +70,17 @@ python -m src.contour_plots.wave_hybrid_plotting
 # Diffusion
 python -m src.contour_plots.diffusion_hybrid_plotting
 ```
+
+## Comparision  of the amplitude and angle encodings
+
+```bash
+# Cavity
+python -m src.testing.cavity_test
+
+# Helmholtz
+python -m src.testing.helmholtz_test
+```
+
 
 Output plots and data will be saved in the appropriate results directory.
 
