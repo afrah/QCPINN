@@ -120,7 +120,7 @@ If you find this work useful, please consider citing:
 
 ```bibtex
 @article{farea2025qcpinn,
-  title={QCPINN: Quantum Classical Physics-Informed Neural Networks for Solving PDEs},
+  title={QCPINN: Quantum-Classical Physics-Informed Neural Networks for Solving PDEs},
   author={Farea, Afrah and Khan, Saiful and Celebi, Mustafa Serdar},
   journal={arXiv preprint arXiv:2503.16678},
   year={2025}
